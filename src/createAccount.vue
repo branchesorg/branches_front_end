@@ -40,7 +40,18 @@ function validatePassword(password) {
     }
 }
 
-function validateEmail() {
+function validateEmailAddress() {
+	// taken from https://stackoverflow.com/questions/46155/how-to-validate-email-address-in-javascript
+	var emailID = document.forms["formName"]["form element id"].value;
+    atpos = emailID.indexOf("@");
+    dotpos = emailID.lastIndexOf(".");
+    if (atpos < 1 || ( dotpos - atpos < 2 )) {
+        alert("Please enter correct email ID")
+        return false;
+    }
+		else {
+			alertify.success("Looks like you're good to go! We sent you an email at this address.")
+		}
 }
 
   export default {
