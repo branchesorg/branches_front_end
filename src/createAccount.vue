@@ -3,16 +3,15 @@
     <input type="email" name="email" id="email" placeholder="Email Address"/>
     <input type="password" name="password" id="password" placeholder="Password"/>
 
-    <input v-if=passwordVisible> 
+    <input v-if=passwordVisible>
         <input type="password" name="password" id="password" placeholder="password"/>
 
         <i id="visibility" v-on:click="toggleVisibility" class=material-icons>visibility</i>
         <button>Create Account</button>
     </div>
 </template>
-    
-<!--> have to make eye visibiility turn on and off <!-->
 
+<!--> have to make eye visibiility turn on and off <!-->
 <!--> add event listener to check if eye is clicked, toggle visibility <!-->
 <!--> use flexbox to make sure that eye appears in the same box as pwd <!-->
 <script>
@@ -34,7 +33,7 @@ function validatePassword(password) {
     if (!/0-9/.test(password)) {
       errors.push({id: 3, message: "Password needs to have a number"})
     }
-    
+
     if (!/!@#\$%\^\&*\)\(+=._-]+$/.test(password)) {
         errors.push({id: 3, message: "Password must contain a special character"})
     }
@@ -45,9 +44,13 @@ function validateEmail(email) {
     var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
     if (!filter.test(email.value)) {
-    alertify.success(('Please provide a valid email address'));
-    email.focus;
-    return false;     
+      alertify.error();(('Please provide a valid email address'));
+      email.focus;
+      return false;
+    else {
+      alertify.success("Looks good! We will send you a verifcation email");
+
+    }
   }
 }
 
@@ -63,7 +66,7 @@ function validateEmail(email) {
             if (visibilityIcon.innerHTML == 'visibility') {
                 visibilityIcon.innerHTML = 'visibility_off';
             }
-            
+
             else {
                 visibilityIcon.innerHTML == 'visibility';
                 passwordInput.type = 'password';
@@ -76,7 +79,7 @@ function validateEmail(email) {
 <style>
     #visibility {
         cursor: pointer;
-        margin-left: -24px; 
+        margin-left: -24px;
     }
     .create-account {
         display: flex;
