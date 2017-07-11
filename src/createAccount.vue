@@ -1,3 +1,4 @@
+
 <template>
     <div class="create-account">
     <input type="email" name="email" id="email" placeholder="Email Address"/>
@@ -5,7 +6,6 @@
 
     <input v-if=passwordVisible>
         <input type="password" name="password" id="password" placeholder="password"/>
-
         <i id="visibility" v-on:click="toggleVisibility" class=material-icons>visibility</i>
         <button>Create Account</button>
     </div>
@@ -16,8 +16,9 @@
 <!--> use flexbox to make sure that eye appears in the same box as pwd <!-->
 <script>
 function clickCreateAccountButton() {
-    // should make username + password dissapear, replace with message that verifcation email has been sent,
-    // also display logout button
+    <button name="createAccountBtn">Create Account</button>
+
+}
 
 function validatePassword(password) {
     //password cannot be less than 8 characters, requires one number, an uppercase letter, and a special character
@@ -25,15 +26,12 @@ function validatePassword(password) {
     if (password.length < 8) {
         errors.push({id: 1, message: "Password needs to be 8 or more characters long"})
     }
-
     if (!/A-Z/.test(password)) {
         errors.push({id: 2, message: "Password needs to have an uppercase letter"})
     }
-
     if (!/0-9/.test(password)) {
       errors.push({id: 3, message: "Password needs to have a number"})
     }
-
     if (!/!@#\$%\^\&*\)\(+=._-]+$/.test(password)) {
         errors.push({id: 3, message: "Password must contain a special character"})
     }
@@ -44,12 +42,11 @@ function validateEmail(email) {
     var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
     if (!filter.test(email.value)) {
-      alertify.error();(('Please provide a valid email address'));
+      alertify.error('Please provide a valid email address');
       email.focus;
       return false;
     else {
       alertify.success("Looks good! We will send you a verifcation email");
-
     }
   }
 }
@@ -75,7 +72,6 @@ function validateEmail(email) {
     }
 }
 </script>
-
 <style>
     #visibility {
         cursor: pointer;
