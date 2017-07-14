@@ -16,8 +16,6 @@
 <!--> use flexbox to make sure that eye appears in the same box as pwd <!-->
 <script>
 function clickCreateAccountButton() {
-    <button name="createAccountBtn">Create Account</button>
-
 }
 
 function validatePassword(password) {
