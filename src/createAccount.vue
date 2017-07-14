@@ -7,7 +7,11 @@
     <input v-if=passwordVisible>
         <input type="password" name="password" id="password" placeholder="password"/>
         <i id="visibility" v-on:click="toggleVisibility" class=material-icons>visibility</i>
-        <button>Create Account</button>
+    <button>Create Account</button>
+      <input v-on:click="clickCreateAccountButton"
+        loggedIn = true;
+        <button id="logoutButton">Log Out</button>
+      <v-on:click="">
     </div>
 </template>
 
@@ -16,23 +20,30 @@
 <!--> use flexbox to make sure that eye appears in the same box as pwd <!-->
 <script>
 function clickCreateAccountButton() {
-    <button name="createAccountBtn">Create Account</button>
+  var el = document.querySelector();
+  var email = document.querySelector("#email");
+  var pwd = document.querySelector("#password");
 
+    if validateEmail() && validatePassword() {
+      password.display.style= none;
+      email.display.style= none;
+      logoutButton.display.style=inline;
+    }
 }
 
 function validatePassword(password) {
     //password cannot be less than 8 characters, requires one number, an uppercase letter, and a special character
     const errors = [];
-    if (password.length < 8) {
+    while (password.length < 8) {
         errors.push({id: 1, message: "Password needs to be 8 or more characters long"})
     }
-    if (!/A-Z/.test(password)) {
+    while (!/A-Z/.test(password)) {
         errors.push({id: 2, message: "Password needs to have an uppercase letter"})
     }
-    if (!/0-9/.test(password)) {
+    while (!/0-9/.test(password)) {
       errors.push({id: 3, message: "Password needs to have a number"})
     }
-    if (!/!@#\$%\^\&*\)\(+=._-]+$/.test(password)) {
+    while (!/!@#\$%\^\&*\)\(+=._-]+$/.test(password)) {
         errors.push({id: 3, message: "Password must contain a special character"})
     }
 }
@@ -50,7 +61,6 @@ function validateEmail(email) {
     }
   }
 }
-
   export default {
     name: 'createAccount',
     data() {
