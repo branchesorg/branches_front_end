@@ -11,7 +11,7 @@
       <input v-on:click="clickCreateAccountButton"
         loggedIn = true;
         <button id="logoutButton">Log Out</button>
-      <v-on:click="">
+          <v-on:click="logoutButton">
     </div>
 </template>
 
@@ -25,27 +25,39 @@ function clickCreateAccountButton() {
   var pwd = document.querySelector("#password");
 
     if validateEmail() && validatePassword() {
-      password.display.style= none;
-      email.display.style= none;
-      logoutButton.display.style=inline;
+      pwd.display.style = 'none';
+      email.display.style = 'none';
+      logoutButton.display.style = 'inline';
     }
 }
 
 function validatePassword(password) {
-    //password cannot be less than 8 characters, requires one number, an uppercase letter, and a special character
-    const errors = [];
-    while (password.length < 8) {
-        errors.push({id: 1, message: "Password needs to be 8 or more characters long"})
+  //password cannot be less than 8 characters, requires one number, an uppercase letter, and a special character
+  const errors = [];
+  var x;
+
+  while (password.length < 8) {
+    errors.push({id: 1, message: "Password needs to be 8 or more characters long"});
+  }
+  while (!/A-Z/.test(password)) {
+    errors.push({id: 2, message: "Password needs to have an uppercase letter"});
+  }
+  while (!/0-9/.test(password)) {
+    errors.push({id: 3, message: "Password needs to have a number"});
+  }
+  while (!/!@#\$%\^\&*\)\(+=._-]+$/.test(password)) {
+    errors.push({id: 4, message: "Password must contain a special character"});
+  }
+    for (x in errors) {
+      alertify.error(errors[x]);
     }
-    while (!/A-Z/.test(password)) {
-        errors.push({id: 2, message: "Password needs to have an uppercase letter"})
-    }
-    while (!/0-9/.test(password)) {
-      errors.push({id: 3, message: "Password needs to have a number"})
-    }
-    while (!/!@#\$%\^\&*\)\(+=._-]+$/.test(password)) {
-        errors.push({id: 3, message: "Password must contain a special character"})
-    }
+}
+
+function logout() {
+  var email = document.querySelector("#email");
+  var pwd = document.querySelector("#password");
+  pwd.display.style = 'none';
+  email.display.style = 'none';
 }
 
 function validateEmail(email) {
@@ -73,7 +85,6 @@ function validateEmail(email) {
             if (visibilityIcon.innerHTML == 'visibility') {
                 visibilityIcon.innerHTML = 'visibility_off';
             }
-
             else {
                 visibilityIcon.innerHTML == 'visibility';
                 passwordInput.type = 'password';
