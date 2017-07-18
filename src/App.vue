@@ -31,7 +31,8 @@ export default {
   },
   components: {
      Facts,
-     createAccount
+     createAccount,
+		 emailForm
   }
 }
 </script>

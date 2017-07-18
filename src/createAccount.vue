@@ -7,11 +7,14 @@
     <input v-if=passwordVisible>
         <input type="password" name="password" id="password" placeholder="password"/>
         <i id="visibility" v-on:click="toggleVisibility" class=material-icons>visibility</i>
+			
     <button>Create Account</button>
-      <input v-on:click="clickCreateAccountButton"
+      <input v-on:click="clickCreateAccountButton">
         loggedIn = true;
-        <button id="logoutButton">Log Out</button>
-          <v-on:click="logoutButton">
+			
+    <button id="logoutButton">Log Out</button>
+      <v-on:click="logoutButton">
+				loggedIn = false; 
     </div>
 </template>
 
