@@ -7,10 +7,14 @@
         flex: 50;
     }
 
+    .theplan {
+        margin-left: 8px;
+    }
 </style>
 <template>
    <div id="app">
-       Version: {{version}}
+       <div ><span class="version">Version: {{version}}</span><span class="theplan"><a href="https://docs.google.com/presentation/d/101sNSVZnh-olwaRi4hRR5u6KcFKF78LoV5FXYWGlIT4/edit?usp=sharing">The Plan</a></span></div>
+
    </div>
 </template>
 

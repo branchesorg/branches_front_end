@@ -1287,10 +1287,10 @@ function initSigmaPlugins() {
         node: [{
             show: 'hovers',
             hide: 'hovers',
-            cssClass: 'sigma-tooltip',
+            cssClass: 'flashcard',
             position: 'top',
             //autoadjust: true,
-            template: '<div class="arrow"></div>' + ' <div class="sigma-tooltip-header">{{label}}</div>' + '  <div class="sigma-tooltip-body">' + '    <table>' + '      <tr><th>X</th> <td>{{x}}</td></tr>' + '      <tr><th>y</th> <td>{{y}}</td></tr>' + '      <tr><th>Label</th> <td>{{label}}</td></tr>' + '    </table>' + '  </div>' + '  <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>',
+            template: '<div class="arrow"></div>' + ' <div class="flashcard-header">{{label}}</div>' + '  <div class="flashcard-body">' + '    <table>' + '      <tr><th>X</th> <td>{{x}}</td></tr>' + '      <tr><th>y</th> <td>{{y}}</td></tr>' + '      <tr><th>Label</th> <td>{{label}}</td></tr>' + '    </table>' + '  </div>' + '  <div class="flashcard-footer">Number of connections: {{degree}}</div>',
             renderer: function (node, template) {
                 // The function context is s.graph
                 node.degree = this.degree(node.id);
@@ -1304,11 +1304,11 @@ function initSigmaPlugins() {
             }
         }, {
             show: 'rightClickNode',
-            cssClass: 'sigma-tooltip',
+            cssClass: 'flashcard',
             position: 'right',
             template: `<div class="arrow"></div>
-             <div class="sigma-tooltip-header">{{label}}</div>
-              <div class="sigma-tooltip-body"> 
+             <div class="flashcard-header">{{label}}</div>
+              <div class="flashcard-body"> 
                <p>How well did you know this topic? </p>
                <p>
                  <button>Not at All (Review in < 2 min)</button>
@@ -1319,13 +1319,13 @@ function initSigmaPlugins() {
                </p> 
                
               </div> 
-             <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>`,
+             <div class="flashcard-footer">Number of connections: {{degree}}</div>`,
             renderer: function (node, template) {
                 console.log('render node arguments are', ...arguments);
                 var newChildTreeTemplate = `
                 <div class="arrow"></div> 
-                  <div class="sigma-tooltip-header">Add a new Fact </div> 
-                    <div class="sigma-tooltip-body"> 
+                  <div class="flashcard-header">Add a new Fact </div> 
+                    <div class="flashcard-body"> 
                       <p id="newTreeForm">
                         <input type="hidden" id="parentId" value="${node.parentId}">
                         Question: <input id='newTreeQuestion' type='text'><br>
@@ -1334,7 +1334,7 @@ function initSigmaPlugins() {
                       </p>
                     </div> 
                   </div> 
-               <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>
+               <div class="flashcard-footer">Number of connections: {{degree}}</div>
                `;
 
                 if (node.type == 'newChildTree') {
@@ -1352,7 +1352,7 @@ function initSigmaPlugins() {
             }
         }],
         stage: {
-            template: '<div class="arrow"></div>' + '<div class="sigma-tooltip-header"> Menu </div>'
+            template: '<div class="arrow"></div>' + '<div class="flashcard-header"> Menu </div>'
         }
     };
     // Instanciate the tooltips plugin with a Mustache renderer for node tooltips:
