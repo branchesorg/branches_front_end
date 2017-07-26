@@ -38,33 +38,28 @@ export class Fact {
     var updates = {
       trees
     }
-    console.log('fact.js about to addTree')
     firebase.database().ref('facts/' +this.id).update(updates)
-    console.log('fact.js just addedTree')
   }
   continueTimer(){
       if (!user.loggedIn) return;
+      if (this.timerId) return;
       const self = this
       this.timerId = setInterval(()=>{
          self.timeElapsedForCurrentUser++
-          console.log('timeElapsedForCurrent user is', self.timeElapsedForCurrentUser)
       },1000)
   }
 
   pauseTimer() {
       if (!user.loggedIn) return;
-      console.log('all facts within fact.js pauseTimer is . . . . .')
-      firebase.database().ref('facts/' + this.id).on('value', function(snapshot) {
-          console.log('snapshot of fact within fact.js pauseTimer is', snapshot.val())
-      })
+      if (!this.timerId) return;
 
       clearInterval(this.timerId)
+      this.timerId = null
       this.usersTimeMap[user.getId()] = this.timeElapsedForCurrentUser
 
       var updates = {
           usersTimeMap: this.usersTimeMap
       }
-      console.log('pause timer called for ',this.id, user.getId(), updates)
       firebase.database().ref('facts/' + this.id).update(updates)
   }
 

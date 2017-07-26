@@ -7,8 +7,8 @@ import './utils'
 import {login} from './login.js'
 
 
-Vue.use(VueFire)
-new Vue({el: '#bootstrap', render: h => h(App) })
+// Vue.use(VueFire)
+// new Vue({el: '#bootstrap', render: h => h(App) })
 
 
 //ABOVE original VUEJS
