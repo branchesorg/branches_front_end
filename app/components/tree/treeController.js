@@ -2,11 +2,24 @@ import {newTree} from '../../objects/newTree.js';
 import {removeTreeFromGraph} from "../treesGraph"
 import {Trees} from '../../objects/trees.js'
 import {Facts} from '../../objects/facts.js'
+
 import {toggleVisibility} from "../../core/utils"
 
-class TreeController {
-    constructor(){
+export class TreeController {
 
+    constructor($scope){
+        this.testarg = 54
+        console.log('Tree controller just called!!!')
+        console.log('this.testarg is', this.testarg)
+        console.log('this.tree is', this.tree)
+
+        this.testvar = this.testvar || 'hello this is a test var'
+        console.log('this .testvar is', this.testvar)
+        this.anothertestvar = $scope.treeCtrl.anothertestvar
+        console.log('another test var is',this.anothertestvar)
+        console.log('constructor $scope is', $scope)
+        console.log('constructor $scope.treeCtrl is', $scope.treeCtrl)
+        console.log('scope another test var is', $scope.treeCtrl.anothertestvar)
     }
 
     editFactOnTreeFromEvent(event) {

@@ -26,7 +26,14 @@ branches.component('header', {
 })
 
 branches.component('tree', {
-    template: require('../components/tree/tree-copy.html'),
+    template: require('../components/tree/tree.html'),
     controller: TreeController,
-    controllerAs: 'treeCtrl'
+    controllerAs: 'treeCtrl',
+    bindings: {
+        testarg: '@',
+        tree: '@'
+        // testvar: '@'
+        , anothertestvar: '@'
+
+    }
 })
