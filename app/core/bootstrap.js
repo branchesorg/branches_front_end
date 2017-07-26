@@ -5,6 +5,7 @@ import './components'
 import './objects'
 import './utils'
 import {login} from './login.js'
+import  {HeaderController} from "../components/header/headerController"
 
 
 // Vue.use(VueFire)
@@ -18,9 +19,8 @@ import {login} from './login.js'
 
 var branches = angular.module('branches', ['ngRoute'])
 branches.component('header', {
-    template: require('../components/header.html'),
-    controller: function HeaderController() {
-        this.login = login;
-    }
+    template: require('../components/header/header.html'),
+    controller: HeaderController,
+    controllerAs: 'headerCtrl'
 })
 

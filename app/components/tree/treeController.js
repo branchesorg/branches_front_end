@@ -59,7 +59,7 @@ class TreeController {
             tree.unlinkFromParent()
         })
     }
-    continueTimer(event){: function(event){
+    continueTimer(event){ function(event){
         var factDom = event.target.parentNode
 
         var factId = factDom.querySelector('.tree-current-fact-id').value
