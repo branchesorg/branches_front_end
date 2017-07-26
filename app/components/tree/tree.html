@@ -2,9 +2,7 @@
     <div class="arrow"></div>
     <div class="tree-fact tree-fact-{{fact.id}}" class="sigma-tooltip-header">
         <div class="tree-current-fact" style="display:block;">
-            <div ng-app="app2">
                 <header></header>
-            </div>
             <input type="text" class="tree-current-fact-id" value="{{fact.id}}" hidden>
             <button class="tree-current-fact-timer-end" onclick="treeCtrl.pauseTimer(event)">Pause/Save Timer</button>
             <div class="tree-current-fact-timer">{{fact.timeElapsedForCurrentUser}} seconds </div>

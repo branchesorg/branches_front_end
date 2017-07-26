@@ -1,8 +1,8 @@
-import {newTree} from '../objects/newTree.js';
-import {removeTreeFromGraph} from "./treesGraph"
-import {Trees} from '../objects/trees.js'
-import {Facts} from '../objects/facts.js'
-import {toggleVisibility} from "../core/utils"
+import {newTree} from '../../objects/newTree.js';
+import {removeTreeFromGraph} from "../treesGraph"
+import {Trees} from '../../objects/trees.js'
+import {Facts} from '../../objects/facts.js'
+import {toggleVisibility} from "../../core/utils"
 
 class TreeController {
     constructor(){
@@ -59,21 +59,16 @@ class TreeController {
             tree.unlinkFromParent()
         })
     }
-    continueTimer(event){ function(event){
+    continueTimer(event){
         var factDom = event.target.parentNode
 
         var factId = factDom.querySelector('.tree-current-fact-id').value
         console.log('fact id in continue timer is', factId)
         Facts.get(factId).then(fact => fact.continueTimer())
-    },
-    pauseTimer: function(event){
+    }
+    pauseTimer(event){
         var factDom = event.target.parentNode
         var factId = factDom.querySelector('.tree-current-fact-id').value
         Facts.get(factId).then(fact => fact.pauseTimer())
     }
 }
-//hacky controller solution for now - as i haven't yet figured out how to (or tried to ) place an angular component inside of a sigmajs/linkurious rendered template on the HTML5 canvas
-const treeCtrl = {
-}
-//accessible in Mustache template via window
-window.treeCtrl = treeCtrl

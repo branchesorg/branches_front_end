@@ -6,6 +6,7 @@ import './objects'
 import './utils'
 import {login} from './login.js'
 import  {HeaderController} from "../components/header/headerController"
+import  {TreeController} from "../components/tree/treeController"
 
 
 // Vue.use(VueFire)
@@ -24,3 +25,8 @@ branches.component('header', {
     controllerAs: 'headerCtrl'
 })
 
+branches.component('tree', {
+    template: require('../components/tree/tree.html'),
+    controller: TreeController,
+    controllerAs: 'treeCtrl'
+})

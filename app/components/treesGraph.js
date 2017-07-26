@@ -176,7 +176,7 @@ function hoverOverNode(e){
     setTimeout(function(){
         var treeNodeDom = document.querySelector('.tree')
         angular.bootstrap(treeNodeDom, ['branches'])
-    },200)//hopefully mustache takes less than 200 ms to render
+    },0)//push this bootstrap function to the end of the callstack so that it is called after mustace does the tooltip rendering
 }
 function updateTreePosition(e){
     let newX = e.data.node.x
