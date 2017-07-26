@@ -24,8 +24,3 @@ branches.component('header', {
     }
 })
 
-branches.config(function($routeProvider){
-    $routeProvider.when('/', {
-        template: '<header></header>'
-    })
-})

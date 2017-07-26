@@ -175,7 +175,6 @@ function hoverOverNode(e){
     tooltips.open(node, toolTipsConfig.node[0], node["renderer1:x"], node["renderer1:y"]);
     setTimeout(function(){
         var treeNodeDom = document.querySelector('.tree')
-        console.log('treenode dom is', treeNodeDom)
         angular.bootstrap(treeNodeDom, ['branches'])
     },200)//hopefully mustache takes less than 200 ms to render
 }
