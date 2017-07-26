@@ -28,7 +28,7 @@ var toolTipsConfig = {
                 console.log('right click render')
                 switch(node.type){
                     case 'tree':
-                        template = require('./tree.html')
+                        template = require('./tree/tree.html') //'<tree></tree>'
                         break;
                     case 'newChildTree':
                         template = require('./newTree.html')

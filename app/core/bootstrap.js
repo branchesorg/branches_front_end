@@ -26,7 +26,7 @@ branches.component('header', {
 })
 
 branches.component('tree', {
-    template: require('../components/tree/tree.html'),
+    template: require('../components/tree/tree-copy.html'),
     controller: TreeController,
     controllerAs: 'treeCtrl'
 })
