@@ -8,6 +8,9 @@ import {toggleVisibility} from "../../core/utils"
 export class TreeController {
 
     constructor($scope, $interval, $filter){
+        this.$scope = $scope;
+        this.$interval = $interval;
+
         this.dataLoaded = false;
         this.testarg = 54
         var self = this
@@ -18,8 +21,8 @@ export class TreeController {
         $scope.timer = $interval(function () {
             //Display the current time.
             var time = new Date();
-            $scope.treeCtrl.message = +$scope.treeCtrl.message || 0;// $scope.treeCtrl.message is going to start off as undefined
-            $scope.treeCtrl.message = +$scope.treeCtrl.message + 1 //"Timer Ticked. " + time;
+            $scope.treeCtrl.secondsElapsedForUser = +$scope.treeCtrl.secondsElapsedForUser || 0;// $scope.treeCtrl.message is going to start off as undefined
+            $scope.treeCtrl.secondsElapsedForUser = +$scope.treeCtrl.secondsElapsedForUser + 1 //"Timer Ticked. " + time;
         }, 1000);
 
         this.testargLoaded = false;
@@ -50,11 +53,14 @@ export class TreeController {
 
         //tree values will only display if we do this
         $scope.$watch('treeCtrl.tree', function(newVal, oldVal, scope){
+            var treeData = JSON.parse(decodeURIComponent(newVal))
+            console.log('treeData is', treeData)
             if (!self.dataLoaded){
                 self.dataLoaded = true
-                console.log('self.tree b4 conversion is', self.tree)
-                self.tree = JSON.parse(self.tree)
-                console.log('self.tree after is', newVal, oldVal, scope, self.tree)
+                self.tree = treeData // todo make a Trees.load() method that takes in a JSON object with all the right properties and converts it into a Trees Object that still has all those properties, but also has the correct methods
+                Facts.get(treeData.fact.id).then(fact => {
+                    self.fact = fact
+                })
             }
 
         })
@@ -118,8 +124,14 @@ export class TreeController {
         Facts.get(factId).then(fact => fact.continueTimer())
     }
     pauseTimer(event){
-        var factDom = event.target.parentNode
-        var factId = factDom.querySelector('.tree-current-fact-id').value
-        Facts.get(factId).then(fact => fact.pauseTimer())
+        console.log('pauseTimer called ', this.$scope.timer)
+        this.$interval.cancel(this.$scope.timer)
+        console.log('pauseTimer finished calling ', this.$scope.timer)
+
+        //self.fact will certainly be loaded by now
+        this.fact.setTimerForUser(this.secondsElapsedForuser)
+        // var factDom = event.target.parentNode
+        // var factId = factDom.querySelector('.tree-current-fact-id').value
+        // Facts.get(factId).then(fact => fact.pauseTimer())
     }
 }

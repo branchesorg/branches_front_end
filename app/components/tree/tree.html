@@ -10,9 +10,9 @@
             <div> Another Test Var 2: {{treeCtrl.anothertestvarr}}</div>
             <div><input ng-model="treeCtrl.testarg" type="text"></div>
             <div>{{treeCtrl.testarg}}</div>
-            <div>Message: {{treeCtrl.message}}</div>
+            <div>Time: {{treeCtrl.secondsElapsedForUser}}</div>
             <div> Scope only arg: {{treeCtrl.testscopeonlyarg}}</div>
-            <button class="tree-current-fact-timer-end" onclick="treeCtrl.pauseTimer(event)">Pause/Save Timer</button>
+            <button class="tree-current-fact-timer-end" ng-click="treeCtrl.pauseTimer(event)">Pause/Save Timer</button>
             <div class="tree-current-fact-timer">{{fact.timeElapsedForCurrentUser}} seconds </div>
             <div class="tree-current-fact-question">{{fact.question}}</div>
             <div class="tree-current-fact-answer">{{fact.answer}}</div>
