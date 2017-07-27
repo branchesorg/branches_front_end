@@ -57,9 +57,13 @@ export class TreeController {
             console.log('treeData is', treeData)
             if (!self.dataLoaded){
                 self.dataLoaded = true
+                console.log('self.tree was', self.tree)
                 self.tree = treeData // todo make a Trees.load() method that takes in a JSON object with all the right properties and converts it into a Trees Object that still has all those properties, but also has the correct methods
+                console.log('self.tree is now', self.tree)
                 Facts.get(treeData.fact.id).then(fact => {
+                    console.log('self.fact was', self.fact)
                     self.fact = fact
+                    console.log('self .fact is now',self.fact)
                 })
             }
 
