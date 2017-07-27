@@ -8,7 +8,13 @@ import {toggleVisibility} from "../../core/utils"
 export class TreeController {
 
     constructor($scope){
+        this.dataLoaded = false;
         this.testarg = 54
+        var self = this
+        setTimeout(function(){
+            this.testarg++
+            console.log('test arg is now', self.testarg)
+        },0)
         console.log('Tree controller just called!!!')
         console.log('this.testarg is', this.testarg)
         console.log('this.tree is', this.tree)
@@ -20,6 +26,22 @@ export class TreeController {
         console.log('constructor $scope is', $scope)
         console.log('constructor $scope.treeCtrl is', $scope.treeCtrl)
         console.log('scope another test var is', $scope.treeCtrl.anothertestvar)
+
+        $scope.$watch('treeCtrl.anothertestvar', function(newVal,oldVal, scope){
+
+            console.log('treectrl.anothertestvar is ', newVal, oldVal, scope, self.anothertestvar)
+
+        })
+        $scope.$watch('treeCtrl.tree', function(newVal, oldVal, scope){
+            if (!self.dataLoaded){
+                self.dataLoaded = true
+                console.log('self.tree b4 conversion is', self.tree)
+                self.tree = JSON.parse(self.tree)
+                console.log('self.tree after is', newVal, oldVal, scope, self.tree)
+            }
+
+
+        })
     }
 
     editFactOnTreeFromEvent(event) {

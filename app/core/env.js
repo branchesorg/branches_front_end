@@ -1,3 +1,3 @@
-const ENV = 'dev'
+const ENV = 'prod'
 
 export default ENV

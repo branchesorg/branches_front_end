@@ -28,7 +28,7 @@ var toolTipsConfig = {
                 console.log('right click render')
                 switch(node.type){
                     case 'tree':
-                        template = '<tree class="tree" testarg="24" tree="{var1: 5, var2: 6}" anothertestvar="97"></tree>'
+                        template = '<tree class="tree" testarg="24" tree=\'{"var1": "5", "var2": "6"}\' anothertestvar="97"></tree>'
                         break;
                     case 'newChildTree':
                         template = require('./newTree.html')
@@ -122,7 +122,7 @@ function addNewChildTreeToTree(tree){
     const newChildTree = {
         id: tree.id + newChildTreeSuffix, //"_newChildTree",
         parentId: tree.id,
-        x: parseInt(tree.x) + newNodeXOffset,
+        x: parseInt(tree.x) + newNodeXOffset + 100,
         y: parseInt(tree.y) + newNodeYOffset,
         label: '+',
         size: 1,
