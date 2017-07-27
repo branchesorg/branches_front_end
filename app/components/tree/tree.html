@@ -3,7 +3,15 @@
     <div class="tree-fact tree-fact-{{fact.id}}" class="sigma-tooltip-header">
         <div class="tree-current-fact" style="display:block;">
             <input type="text" class="tree-current-fact-id" value="{{fact.id}}" hidden>
-            {{treeCtrl.testarg}} {{treeCtrl.tree.var1}}{{treeCtrl.tree.var2}} {{treeCtrl.anothertestvar}}
+            <div> Test arg: {{treeCtrl.testarg}}</div>
+            <div> Test tree values: var1: {{treeCtrl.tree.var1}} var2: {{treeCtrl.tree.var2}}</div>
+            <div> test Var: {{treeCtrl.testvar}}</div>
+            <div> Another Test Var: {{treeCtrl.anothertestvar}}</div>
+            <div> Another Test Var 2: {{treeCtrl.anothertestvarr}}</div>
+            <div><input ng-model="treeCtrl.testarg" type="text"></div>
+            <div>{{treeCtrl.testarg}}</div>
+            <div>Message: {{treeCtrl.message}}</div>
+            <div> Scope only arg: {{treeCtrl.testscopeonlyarg}}</div>
             <button class="tree-current-fact-timer-end" onclick="treeCtrl.pauseTimer(event)">Pause/Save Timer</button>
             <div class="tree-current-fact-timer">{{fact.timeElapsedForCurrentUser}} seconds </div>
             <div class="tree-current-fact-question">{{fact.question}}</div>

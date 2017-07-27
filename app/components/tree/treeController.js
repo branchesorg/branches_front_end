@@ -7,31 +7,47 @@ import {toggleVisibility} from "../../core/utils"
 
 export class TreeController {
 
-    constructor($scope){
+    constructor($scope, $interval, $filter){
         this.dataLoaded = false;
         this.testarg = 54
         var self = this
-        setTimeout(function(){
-            this.testarg++
-            console.log('test arg is now', self.testarg)
-        },0)
-        console.log('Tree controller just called!!!')
-        console.log('this.testarg is', this.testarg)
-        console.log('this.tree is', this.tree)
 
-        this.testvar = this.testvar || 'hello this is a test var'
-        console.log('this .testvar is', this.testvar)
-        this.anothertestvar = $scope.treeCtrl.anothertestvar
-        console.log('another test var is',this.anothertestvar)
-        console.log('constructor $scope is', $scope)
-        console.log('constructor $scope.treeCtrl is', $scope.treeCtrl)
-        console.log('scope another test var is', $scope.treeCtrl.anothertestvar)
+        $scope.treeCtrl.message = "Timer started. ";
 
-        $scope.$watch('treeCtrl.anothertestvar', function(newVal,oldVal, scope){
+                //Initialize the Timer to run every 1000 milliseconds i.e. one second.
+        $scope.timer = $interval(function () {
+            //Display the current time.
+            var time = new Date();
+            $scope.treeCtrl.message = "Timer Ticked. " + time;
+        }, 1000);
 
-            console.log('treectrl.anothertestvar is ', newVal, oldVal, scope, self.anothertestvar)
+        this.testargLoaded = false;
+        $scope.$watch('treeCtrl.testarg', function(newVal, oldVal, scope){
+            console.log('$scope.test arg is', $scope.treeCtrl.testarg, ...arguments)
+            // if (!self.testargloaded){
+            //     self.testargloaded = true
+            //     setInterval(function(){
+            //         console.log('test arg is currently', $scope.treeCtrl.testarg++)
+            //         $scope.treeCtrl.testarg = $scope.treeCtrl.testarg + 1; //++
+            //         console.log('test arg is now', $scope.treeCtrl.testarg)
+            //         // console.log('$scope.testarg is originally ', newVal, oldVal)
+            //         // $scope.testarg = newVal;
+            //         // $scope.testarg = +$scope.testarg + 1
+            //         // console.log('test arg is now', $scope.testarg)
+            //     },1000)
+            // }
 
+
+
+
+
+            // console.log('$scope.testarg is originally ', $scope.testarg)
+            // $scope.testarg = +$scope.testarg + 1
+            // console.log('test arg is now', $scope.testarg)
         })
+        this.testvar = this.testvar || 'hello this is a test var'
+
+        //tree values will only display if we do this
         $scope.$watch('treeCtrl.tree', function(newVal, oldVal, scope){
             if (!self.dataLoaded){
                 self.dataLoaded = true
@@ -39,7 +55,6 @@ export class TreeController {
                 self.tree = JSON.parse(self.tree)
                 console.log('self.tree after is', newVal, oldVal, scope, self.tree)
             }
-
 
         })
     }
