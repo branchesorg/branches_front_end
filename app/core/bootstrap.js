@@ -35,6 +35,7 @@ branches.component('tree', {
         // testvar: '@'
         , anothertestvar: '@'
         , anothertestvarr: '@'
+        , message: '@'
 
     }
 })

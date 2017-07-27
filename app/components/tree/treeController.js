@@ -12,13 +12,14 @@ export class TreeController {
         this.testarg = 54
         var self = this
 
-        $scope.treeCtrl.message = "Timer started. ";
+        $scope.treeCtrl.message = 1; //"Timer started. ";
 
                 //Initialize the Timer to run every 1000 milliseconds i.e. one second.
         $scope.timer = $interval(function () {
             //Display the current time.
             var time = new Date();
-            $scope.treeCtrl.message = "Timer Ticked. " + time;
+            $scope.treeCtrl.message = +$scope.treeCtrl.message || 0;// $scope.treeCtrl.message is going to start off as undefined
+            $scope.treeCtrl.message = +$scope.treeCtrl.message + 1 //"Timer Ticked. " + time;
         }, 1000);
 
         this.testargLoaded = false;
