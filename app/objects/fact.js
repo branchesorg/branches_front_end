@@ -63,8 +63,10 @@ export class Fact {
       firebase.database().ref('facts/' + this.id).update(updates)
   }
   setTimerForUser(time){
-      console.log('setTimer for user just called')
+      console.log('setTimer for user just called on this,', this, time)
+
       this.usersTimeMap[user.getId()] = time
+      console.log('setTimer for user just called on this NOW,', this)
 
       var updates = {
           usersTimeMap: this.usersTimeMap

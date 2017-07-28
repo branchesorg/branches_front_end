@@ -2,6 +2,7 @@ import {newTree} from '../../objects/newTree.js';
 import {removeTreeFromGraph} from "../treesGraph"
 import {Trees} from '../../objects/trees.js'
 import {Facts} from '../../objects/facts.js'
+import user from '../../objects/user.js'
 
 import {toggleVisibility} from "../../core/utils"
 
@@ -15,8 +16,6 @@ export class TreeController {
         this.testarg = 54
         var self = this
 
-        $scope.treeCtrl.message = 1; //"Timer started. ";
-
                 //Initialize the Timer to run every 1000 milliseconds i.e. one second.
         $scope.timer = $interval(function () {
             //Display the current time.
@@ -25,31 +24,6 @@ export class TreeController {
             $scope.treeCtrl.secondsElapsedForUser = +$scope.treeCtrl.secondsElapsedForUser + 1 //"Timer Ticked. " + time;
         }, 1000);
 
-        this.testargLoaded = false;
-        $scope.$watch('treeCtrl.testarg', function(newVal, oldVal, scope){
-            console.log('$scope.test arg is', $scope.treeCtrl.testarg, ...arguments)
-            // if (!self.testargloaded){
-            //     self.testargloaded = true
-            //     setInterval(function(){
-            //         console.log('test arg is currently', $scope.treeCtrl.testarg++)
-            //         $scope.treeCtrl.testarg = $scope.treeCtrl.testarg + 1; //++
-            //         console.log('test arg is now', $scope.treeCtrl.testarg)
-            //         // console.log('$scope.testarg is originally ', newVal, oldVal)
-            //         // $scope.testarg = newVal;
-            //         // $scope.testarg = +$scope.testarg + 1
-            //         // console.log('test arg is now', $scope.testarg)
-            //     },1000)
-            // }
-
-
-
-
-
-            // console.log('$scope.testarg is originally ', $scope.testarg)
-            // $scope.testarg = +$scope.testarg + 1
-            // console.log('test arg is now', $scope.testarg)
-        })
-        this.testvar = this.testvar || 'hello this is a test var'
 
         //tree values will only display if we do this
         $scope.$watch('treeCtrl.tree', function(newVal, oldVal, scope){
@@ -63,6 +37,7 @@ export class TreeController {
                 Facts.get(treeData.fact.id).then(fact => {
                     console.log('self.fact was', self.fact)
                     self.fact = fact
+                    self.$scope.treeCtrl.secondsElapsedForUser = fact.usersTimeMap[user.getId()]
                     console.log('self .fact is now',self.fact)
                 })
             }
@@ -120,20 +95,20 @@ export class TreeController {
             tree.unlinkFromParent()
         })
     }
-    continueTimer(event){
-        var factDom = event.target.parentNode
-
-        var factId = factDom.querySelector('.tree-current-fact-id').value
-        console.log('fact id in continue timer is', factId)
-        Facts.get(factId).then(fact => fact.continueTimer())
-    }
+    // continueTimer(event){
+    //     var factDom = event.target.parentNode
+    //
+    //     var factId = factDom.querySelector('.tree-current-fact-id').value
+    //     console.log('fact id in continue timer is', factId)
+    //     Facts.get(factId).then(fact => fact.continueTimer())
+    // }
     pauseTimer(event){
-        console.log('pauseTimer called ', this.$scope.timer)
+        console.log('pauseTimer called ', this.$scope)
         this.$interval.cancel(this.$scope.timer)
-        console.log('pauseTimer finished calling ', this.$scope.timer)
+        console.log('pauseTimer finished calling ', this.$scope)
 
         //self.fact will certainly be loaded by now
-        this.fact.setTimerForUser(this.secondsElapsedForuser)
+        this.fact.setTimerForUser(this.$scope.treeCtrl.secondsElapsedForUser)
         // var factDom = event.target.parentNode
         // var factId = factDom.querySelector('.tree-current-fact-id').value
         // Facts.get(factId).then(fact => fact.pauseTimer())
