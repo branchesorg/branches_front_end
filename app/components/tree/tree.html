@@ -3,13 +3,6 @@
     <!--<div class="tree-fact tree-fact-{{treeCtrl.fact.id}} sigma-tooltip-header">-->
         <div class="tree-current-fact" style="display:block;">
             <!--<input type="text" class="tree-current-fact-id" value="{{fact.id}}" hidden>-->
-            <!--<div> Test arg: {{treeCtrl.testarg}}</div>-->
-            <!--<div> Test tree values: var1: {{treeCtrl.tree.var1}} var2: {{treeCtrl.tree.var2}}</div>-->
-            <!--<div> test Var: {{treeCtrl.testvar}}</div>-->
-            <!--<div> Another Test Var: {{treeCtrl.anothertestvar}}</div>-->
-            <!--<div> Another Test Var 2: {{treeCtrl.anothertestvarr}}</div>-->
-            <!--<div><input ng-model="treeCtrl.testarg" type="text"></div>-->
-            <!--<div>{{treeCtrl.testarg}}</div>-->
             <div>Time: {{treeCtrl.secondsElapsedForUser}}</div>
             <!--<div> Scope only arg: {{treeCtrl.testscopeonlyarg}}</div>-->
             <button class="tree-current-fact-timer-end" ng-click="treeCtrl.pauseTimer(event)">Pause/Save Timer</button>
@@ -17,13 +10,13 @@
             <div class="tree-current-fact-question">{{treeCtrl.fact.question}}</div>
             <div class="tree-current-fact-answer">{{treeCtrl.fact.answer}}</div>
         </div>
-        <!--<div class="tree-new-fact" style="display:none;" >-->
-            <!--<input class="tree-id" value="{{treeCtrl.id}}" type="hidden">-->
-            <!--<input class="tree-new-fact-question" value="{{treeCtrl.fact.question}}">-->
-            <!--<input class="tree-new-fact-answer" value="{{treeCtrl.fact.answer}}">-->
-            <!--<button class="fact-new-save" onclick="treeCtrl.editFactOnTreeFromEvent(event)">Save</button>-->
-        <!--</div>-->
-        <!--<button class="sigma-tooltip-edit-button" onclick="treeCtrl.toggleEdit(event)" >Edit</button>-->
+        <div class="tree-new-fact" style="display:none;" >
+            <input class="tree-id" value="{{treeCtrl.id}}" type="hidden">
+            <input class="tree-new-fact-question" value="{{treeCtrl.fact.question}}">
+            <input class="tree-new-fact-answer" value="{{treeCtrl.fact.answer}}">
+            <button class="fact-new-save" onclick="treeCtrl.editFactOnTreeFromEvent(event)">Save</button>
+        </div>
+        <button class="sigma-tooltip-edit-button" onclick="treeCtrl.toggleEdit(event)" >Edit</button>
     <!--</div>-->
     <!--<div class="tree-confidence sigma-tooltip-body">-->
         <!--<p>How well did you know this topic? </p>-->
