@@ -7,7 +7,7 @@ import PubSub from 'pubsub-js'
 
 import {toggleVisibility} from "../../core/utils"
 
-export class TreeController {
+export class TreeControllerAngular {
 
     constructor($scope, $interval, $filter){
         this.$scope = $scope;
@@ -41,7 +41,7 @@ export class TreeController {
                 Facts.get(treeData.fact.id).then(fact => {
                     self.fact = fact
                     self.$scope.treeCtrl.secondsElapsedForUser = fact.usersTimeMap[user.getId()]
-                    console.log('treeController Fact.get results and storage into secondsElpasedFor User are', fact, self.$scope.treeCtrl.secondsElapsedForUser)
+                    console.log('TreeControllerAngular Fact.get results and storage into secondsElpasedFor User are', fact, self.$scope.treeCtrl.secondsElapsedForUser)
                 })
             }
 
@@ -53,7 +53,7 @@ export class TreeController {
         // PubSub.subscribe('canvas.clicked', self.pauseTimer)
     }
     $onInit() {
-        console.log(' on init called for treeController')
+        console.log(' on init called forTreeControllerAngular')
     }
     // $onDestroy(){
     //     console.log('on destroy called 2')

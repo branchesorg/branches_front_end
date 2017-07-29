@@ -2,6 +2,7 @@ import {Trees} from '../objects/trees.js'
 import {Tree} from '../objects/tree.js'
 import {Facts} from '../objects/facts.js'
 import {Globals} from '../core/globals.js'
+import {Config} from '../core/config'
 import './newTreeController'
 import '../core/login.js'
 import PubSub from 'pubsub-js'
@@ -32,7 +33,13 @@ var toolTipsConfig = {
                 var nodeInEscapedJsonForm = encodeURIComponent(JSON.stringify(node))
                 switch(node.type){
                     case 'tree':
-                        template = '<tree class="tree" testarg="24" tree="' + nodeInEscapedJsonForm + '" anothertestvar="97" anothertestvarr="87" testscopeonlyarg="10" message="' + node.fact.timeElapsedForCurrentUser + '"></tree>'
+                        if (Config.framework ==
+                        'angular1'){
+                            template = '<tree class="tree" testarg="24" tree="' + nodeInEscapedJsonForm + '" anothertestvar="97" anothertestvarr="87" testscopeonlyarg="10" message="' + node.fact.timeElapsedForCurrentUser + '"></tree>'
+                        }
+                        else if (Config.framework == 'vue') {
+                            template = '<tree class="tree">THIS IS A TREE</tree>'
+                        }
                         break;
                     case 'newChildTree':
                         template = require('./newTree.html')
