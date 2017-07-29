@@ -1,7 +1,7 @@
 <div class="tree-copy">
     <!--<div class="arrow"></div>-->
     <!--<div class="tree-fact tree-fact-{{treeCtrl.fact.id}} sigma-tooltip-header">-->
-        <div class="tree-current-fact" style="display:block;">
+        <div class="tree-current-fact" ng-if="!treeCtrl.editMode">
             <!--<input type="text" class="tree-current-fact-id" value="{{fact.id}}" hidden>-->
             <div>Time: {{treeCtrl.secondsElapsedForUser}}</div>
             <!--<div> Scope only arg: {{treeCtrl.testscopeonlyarg}}</div>-->
@@ -10,13 +10,13 @@
             <div class="tree-current-fact-question">{{treeCtrl.fact.question}}</div>
             <div class="tree-current-fact-answer">{{treeCtrl.fact.answer}}</div>
         </div>
-        <div class="tree-new-fact" style="display:none;" >
-            <input class="tree-id" value="{{treeCtrl.id}}" type="hidden">
-            <input class="tree-new-fact-question" value="{{treeCtrl.fact.question}}">
-            <input class="tree-new-fact-answer" value="{{treeCtrl.fact.answer}}">
-            <button class="fact-new-save" onclick="treeCtrl.editFactOnTreeFromEvent(event)">Save</button>
+        <div class="tree-new-fact" ng-if="treeCtrl.editMode">
+            <input class="tree-id" ng-model="treeCtrl.id" type="hidden">
+            <input class="tree-new-fact-question" ng-model="treeCtrl.fact.question">
+            <input class="tree-new-fact-answer" ng-model="treeCtrl.fact.answer">
+            <button class="fact-new-save" ng-click="treeCtrl.editFactOnTreeFromEvent()">Save</button>
         </div>
-        <button class="sigma-tooltip-edit-button" onclick="treeCtrl.toggleEdit(event)" >Edit</button>
+        <button class="sigma-tooltip-edit-button" ng-click="treeCtrl.toggleEdit(event)" >Edit</button>
     <!--</div>-->
     <!--<div class="tree-confidence sigma-tooltip-body">-->
         <!--<p>How well did you know this topic? </p>-->

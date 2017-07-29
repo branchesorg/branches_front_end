@@ -3,6 +3,7 @@ import {removeTreeFromGraph} from "../treesGraph"
 import {Trees} from '../../objects/trees.js'
 import {Facts} from '../../objects/facts.js'
 import user from '../../objects/user.js'
+import PubSub from 'pubsub-js'
 
 import {toggleVisibility} from "../../core/utils"
 
@@ -11,79 +12,72 @@ export class TreeController {
     constructor($scope, $interval, $filter){
         this.$scope = $scope;
         this.$interval = $interval;
+        this.editMode = false
 
         this.dataLoaded = false;
         this.testarg = 54
         var self = this
 
-                //Initialize the Timer to run every 1000 milliseconds i.e. one second.
+        //Initialize the Timer to run every 1000 milliseconds i.e. one second.
         $scope.timer = $interval(function () {
             //Display the current time.
             var time = new Date();
             $scope.treeCtrl.secondsElapsedForUser = +$scope.treeCtrl.secondsElapsedForUser || 0;// $scope.treeCtrl.message is going to start off as undefined
             $scope.treeCtrl.secondsElapsedForUser = +$scope.treeCtrl.secondsElapsedForUser + 1 //"Timer Ticked. " + time;
+            self.fact.setTimerForUser($scope.treeCtrl.secondsElapsedForUser) // update every second rather than just when the user stops looking at/ studying the node on the tree on the canvas (e.g. when the user clicks on another part of the canvas, the displayed fact stops displaying). closes. The reason I did it this way is because when i couldn't figure out how to access the $destroy event on when the displayed fact stops displaying. It's like the $destroy event would never even get called . . .
         }, 1000);
-
+        $scope.$on('$destroy', function(){
+            console.log('destroy called')
+            self.pauseTimer()
+        }); //when user clicks on canvas, component is destroyed and time spend on that topic needs to be updated in the db
 
         //tree values will only display if we do this
         $scope.$watch('treeCtrl.tree', function(newVal, oldVal, scope){
             var treeData = JSON.parse(decodeURIComponent(newVal))
-            console.log('treeData is', treeData)
             if (!self.dataLoaded){
                 self.dataLoaded = true
-                console.log('self.tree was', self.tree)
                 self.tree = treeData // todo make a Trees.load() method that takes in a JSON object with all the right properties and converts it into a Trees Object that still has all those properties, but also has the correct methods
-                console.log('self.tree is now', self.tree)
+                self.id = self.tree.id
                 Facts.get(treeData.fact.id).then(fact => {
-                    console.log('self.fact was', self.fact)
                     self.fact = fact
                     self.$scope.treeCtrl.secondsElapsedForUser = fact.usersTimeMap[user.getId()]
-                    console.log('self .fact is now',self.fact)
+                    console.log('treeController Fact.get results and storage into secondsElpasedFor User are', fact, self.$scope.treeCtrl.secondsElapsedForUser)
                 })
             }
 
         })
-    }
+        self.$onDestroy = function() {
+            console.log("on destroy called")
+        }
 
-    editFactOnTreeFromEvent(event) {
-        const treeNewFactDom = event.target.parentNode
-        var question = treeNewFactDom.querySelector('.tree-new-fact-question').value
-        var answer = treeNewFactDom.querySelector('.tree-new-fact-answer').value
-        var treeId = treeNewFactDom.querySelector('.tree-id').value
-        //1. create new fact
-        var fact=
-            Facts.create(
-                {
-                    question: question,
-                    answer: answer,
-                }
-            )
+        // PubSub.subscribe('canvas.clicked', self.pauseTimer)
+    }
+    $onInit() {
+        console.log(' on init called for treeController')
+    }
+    // $onDestroy(){
+    //     console.log('on destroy called 2')
+    // }
+
+    editFactOnTreeFromEvent() {
+        //TODO: call this event on toggleEdit, but only if the question or answer have changed
+
+        // 1. create new fact
+        var question = this.$scope.treeCtrl.fact.question
+        var answer = this.$scope.treeCtrl.fact.answer
+        var treeId = this.$scope.treeCtrl.id
+        var fact= Facts.create( {question, answer})
         //2.link new fact with current tree
         fact.addTree(treeId)
-        Trees.get(treeId).then( tree => tree.changeFact(fact.id))
+        Trees.get(treeId).then( tree => tree.changeFact(fact.id)) //TODO: verify if this step works?
 
-        //3.update UI source for question and fact
-        var sigmaNode = s.graph.nodes().find(node => node.id == treeId)
-        sigmaNode.fact = fact
-        s.refresh()
+        // 3. close the edit functionality
+        this.toggleEdit()
 
-        //4. close the edit functionality
-        const treeFactDom = treeNewFactDom.parentNode
-        window.treeCtrl.toggleEditGivenTreeFactDom(treeFactDom)
-
-        //5. ^^3 and 4 don't seem to be working. Workaround below:
-
-        alert('Fact updated. Refresh the page to see changes')
+        //4. TODO: figure out how to refresh the question which displays on the sigma graph
     }
-    toggleEditGivenTreeFactDom(){
-        let treeCurrentFactDom = treeFactDom.querySelector('.tree-current-fact')
-        let treeNewFactDom = treeFactDom.querySelector('.tree-new-fact')
-        toggleVisibility(treeCurrentFactDom)
-        toggleVisibility(treeNewFactDom)
-    }
-    toggleEdit(event){
-        const factEditDom = event.target.parentNode
-        window.treeCtrl.toggleEditGivenTreeFactDom(factEditDom)
+    toggleEdit(){
+        this.editMode = !this.editMode
     }
     deleteTree(event){
         var deleteTreeForm = event.target.parentNode
@@ -102,15 +96,9 @@ export class TreeController {
     //     console.log('fact id in continue timer is', factId)
     //     Facts.get(factId).then(fact => fact.continueTimer())
     // }
-    pauseTimer(event){
-        console.log('pauseTimer called ', this.$scope)
+    pauseTimer(){
+        console.log('pause timer called')
         this.$interval.cancel(this.$scope.timer)
-        console.log('pauseTimer finished calling ', this.$scope)
-
-        //self.fact will certainly be loaded by now
         this.fact.setTimerForUser(this.$scope.treeCtrl.secondsElapsedForUser)
-        // var factDom = event.target.parentNode
-        // var factId = factDom.querySelector('.tree-current-fact-id').value
-        // Facts.get(factId).then(fact => fact.pauseTimer())
     }
 }

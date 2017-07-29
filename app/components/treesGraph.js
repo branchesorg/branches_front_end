@@ -2,9 +2,9 @@ import {Trees} from '../objects/trees.js'
 import {Tree} from '../objects/tree.js'
 import {Facts} from '../objects/facts.js'
 import {Globals} from '../core/globals.js'
-import './treeController'
 import './newTreeController'
 import '../core/login.js'
+import PubSub from 'pubsub-js'
 var initialized = false;
 var s,
     g = {
@@ -14,6 +14,10 @@ var s,
 window.g = g
 window.s = s;
 
+var graphContainer = document.querySelector('#graph-container')
+graphContainer.addEventListener('click', () => {
+    console.log('GRAPH CONTAINER CLICK', arguments)
+})
 var newNodeXOffset = -100,
     newNodeYOffset = 100,
     newChildTreeSuffix = "__newChildTree";
@@ -26,12 +30,9 @@ var toolTipsConfig = {
             template: '',
             renderer: function(node, template) {
                 var nodeInEscapedJsonForm = encodeURIComponent(JSON.stringify(node))
-                console.log('NODE IN JSON form is', nodeInEscapedJsonForm)
-                console.log('right click render')
                 switch(node.type){
                     case 'tree':
                         template = '<tree class="tree" testarg="24" tree="' + nodeInEscapedJsonForm + '" anothertestvar="97" anothertestvarr="87" testscopeonlyarg="10" message="' + node.fact.timeElapsedForCurrentUser + '"></tree>'
-                        console.log('the template is', template)
                         break;
                     case 'newChildTree':
                         template = require('./newTree.html')
@@ -161,12 +162,17 @@ function initSigma(){
         var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
         s.refresh();
 
-        s.bind('click', printNodeInfo )
+        s.bind('click', onCanvasClick)
         s.bind('outNode', updateTreePosition); // after dragging a node, a user's mouse will eventually leave the node, and we need to update the node's position on the graph
         s.bind('overNode', hoverOverNode)
         initialized = true;
     }
     initSigmaPlugins()
+}
+function onCanvasClick(e){
+    console.log('canvas click!')
+    PubSub.publish('canvas.clicked', true)
+    console.log(e, e.data.node)
 }
 function printNodeInfo(e){
    console.log(e, e.data.node)
@@ -182,6 +188,7 @@ function hoverOverNode(e){
     },0)//push this bootstrap function to the end of the callstack so that it is called after mustace does the tooltip rendering
 }
 function updateTreePosition(e){
+    console.log("outNODE just called")
     let newX = e.data.node.x
     let newY = e.data.node.y
     let treeId = e.data.node.id;
