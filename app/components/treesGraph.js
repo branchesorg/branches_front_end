@@ -6,6 +6,8 @@ import {Config} from '../core/config'
 import './newTreeController'
 import '../core/login.js'
 import PubSub from 'pubsub-js'
+import TreeVue from '../components/tree/tree.vue'
+import Vue from 'vue'
 var initialized = false;
 var s,
     g = {
@@ -33,8 +35,7 @@ var toolTipsConfig = {
                 var nodeInEscapedJsonForm = encodeURIComponent(JSON.stringify(node))
                 switch(node.type){
                     case 'tree':
-                        if (Config.framework ==
-                        'angular1'){
+                        if (Config.framework == 'angular1'){
                             template = '<tree class="tree" testarg="24" tree="' + nodeInEscapedJsonForm + '" anothertestvar="97" anothertestvarr="87" testscopeonlyarg="10" message="' + node.fact.timeElapsedForCurrentUser + '"></tree>'
                         }
                         else if (Config.framework == 'vue') {
@@ -191,7 +192,11 @@ function hoverOverNode(e){
     tooltips.open(node, toolTipsConfig.node[0], node["renderer1:x"], node["renderer1:y"]);
     setTimeout(function(){
         var treeNodeDom = document.querySelector('.tree')
-        angular.bootstrap(treeNodeDom, ['branches'])
+        if (Config.framework == 'angular1'){
+            angular.bootstrap(treeNodeDom, ['branches'])
+        } else {
+            var v = new Vue({el: '.tree', render: h => h(TreeVue)})
+        }
     },0)//push this bootstrap function to the end of the callstack so that it is called after mustace does the tooltip rendering
 }
 function updateTreePosition(e){
