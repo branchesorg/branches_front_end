@@ -3,14 +3,11 @@ import {Tree} from '../objects/tree.js'
 import {Facts} from '../objects/facts.js'
 import {Globals} from '../core/globals.js'
 import {Config} from '../core/config'
-import './newTreeController'
 import '../core/login.js'
 import PubSub from 'pubsub-js'
 import TreeComponent from './tree/treecomponent'
 import NewTreeComponent from './newtree/newtreecomponent'
 import Vue from 'vue'
-import AsyncComputed from 'vue-async-computed'
-Vue.use(AsyncComputed)
 var initialized = false;
 var s,
     g = {
