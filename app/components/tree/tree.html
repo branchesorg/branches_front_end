@@ -1,8 +1,8 @@
 <div>
     <!--<div> fact question: {{// fact.question}}</div>-->
     <div class="tree-current-fact-timer">{{fact.timeElapsedForCurrentUser}}</div>
-    <div class="tree-current-fact">
-        <button v-on:click="saveTimer">Save Timer</button>
+    <button v-on:click="saveTimer">Save Timer</button>
+    <div class="tree-current-fact" v-if="!editing">
         <input type="text" class="tree-current-fact-id" :value="fact.id" hidden>
         <!--<div>Time: {{treeCtrl.secondsElapsedForUser}}</div>-->
         <!--<div> Scope only arg: {{treeCtrl.testscopeonlyarg}}</div>-->
@@ -10,11 +10,13 @@
         <div class="tree-current-fact-question">{{fact.question}}</div>
         <div class="tree-current-fact-answer">{{fact.answer}}</div>
     </div>
-    <!--<div class="tree-new-fact" ng-if="treeCtrl.editMode">-->
-        <!--<input class="tree-id" ng-model="treeCtrl.id" type="hidden">-->
-        <!--<input class="tree-new-fact-question" ng-model="treeCtrl.fact.question">-->
-        <!--<input class="tree-new-fact-answer" ng-model="treeCtrl.fact.answer">-->
-        <!--<button class="fact-new-save" ng-click="treeCtrl.editFactOnTreeFromEvent()">Save</button>-->
-    <!--</div>-->
+    <div class="tree-new-fact" v-if="editing">
+        <input class="tree-id" v-model="fact.id">
+        <input class="tree-new-fact-question" v-model="fact.question">
+        <input class="tree-new-fact-answer" v-model="fact.answer">
+        <button class="fact-new-save" v-on:click="changeFactForTree">Save</button>
+    </div>
+    <button v-on:click="toggleEditing">{{editing ? "Stop Editing" : "Edit"}}</button>
+    {{editing}}
     <!--<button class="sigma-tooltip-edit-button" ng-click="treeCtrl.toggleEdit(event)" >Edit</button>-->
 </div>
