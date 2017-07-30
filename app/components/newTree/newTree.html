@@ -1,0 +1,12 @@
+<div>
+    <div class="arrow"></div>
+    <div class="sigma-tooltip-header">Add a new Fact </div>
+    <div class="sigma-tooltip-body">
+        <p class="newTree-form">
+            <input type="hidden" class="newTree-parentId" v-model="parentid">
+            Question: <input class='newTree-question' type='text' v-model="question"><br>
+            Answer: <input class='newTree-answer' type='text' v-model="answer"><br>
+            <button class='newTree-create-button' v-on:click="createNewTree">Create New Tree</button>
+        </p>
+    </div>
+</div>

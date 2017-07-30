@@ -1,12 +1,7 @@
 <div>
-    <!--<div> fact question: {{// fact.question}}</div>-->
     <div class="tree-current-fact-timer">{{fact.timeElapsedForCurrentUser}}</div>
-    <button v-on:click="saveTimer">Save Timer</button>
     <div class="tree-current-fact" v-if="!editing">
         <input type="text" class="tree-current-fact-id" :value="fact.id" hidden>
-        <!--<div>Time: {{treeCtrl.secondsElapsedForUser}}</div>-->
-        <!--<div> Scope only arg: {{treeCtrl.testscopeonlyarg}}</div>-->
-        <!--<button class="tree-current-fact-timer-end" ng-click="treeCtrl.pauseTimer(event)">Pause/Save Timer</button>-->
         <div class="tree-current-fact-question">{{fact.question}}</div>
         <div class="tree-current-fact-answer">{{fact.answer}}</div>
     </div>
@@ -17,6 +12,4 @@
         <button class="fact-new-save" v-on:click="changeFactForTree">Save</button>
     </div>
     <button v-on:click="toggleEditing">{{editing ? "Stop Editing" : "Edit"}}</button>
-    {{editing}}
-    <!--<button class="sigma-tooltip-edit-button" ng-click="treeCtrl.toggleEdit(event)" >Edit</button>-->
 </div>

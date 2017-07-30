@@ -6,8 +6,8 @@ import {Config} from '../core/config'
 import './newTreeController'
 import '../core/login.js'
 import PubSub from 'pubsub-js'
-import TreeVue from '../components/tree/tree.vue'
 import TreeComponent from './tree/treecomponent'
+import NewTreeComponent from './newtree/newtreecomponent'
 import Vue from 'vue'
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
@@ -20,10 +20,6 @@ var s,
 window.g = g
 window.s = s;
 
-var graphContainer = document.querySelector('#graph-container')
-graphContainer.addEventListener('click', () => {
-    console.log('GRAPH CONTAINER CLICK', arguments)
-})
 var newNodeXOffset = -100,
     newNodeYOffset = 100,
     newChildTreeSuffix = "__newChildTree";
@@ -42,11 +38,11 @@ var toolTipsConfig = {
                             template = '<tree class="tree" testarg="24" tree="' + nodeInEscapedJsonForm + '" anothertestvar="97" anothertestvarr="87" testscopeonlyarg="10" message="' + node.fact.timeElapsedForCurrentUser + '"></tree>'
                         }
                         else if (Config.framework == 'vue') {
-                            template = '<div id="vue"><tree id="1" movie="spiderman"></tree></div>'
+                            template = '<div id="vue"><tree id="' + node.id + '"></tree></div>'
                         }
                         break;
                     case 'newChildTree':
-                        template = require('./newTree.html')
+                        template = '<div id="vue"><newtree parentid="' + node.parentId + '"></newtree></div>'
                         break;
                 }
                 var result = Mustache.render(template, node)
@@ -199,6 +195,7 @@ function hoverOverNode(e){
             angular.bootstrap(treeNodeDom, ['branches'])
         } else {
             Vue.component('tree', TreeComponent)
+            Vue.component('newtree', NewTreeComponent)
             // {
             //     template: require('./tree/tree.html'), // '<div> {{movie}} this is the tree template</div>',
             //     props: ['movie']
@@ -237,6 +234,7 @@ function updateTreePosition(e){
 export function addTreeToGraph(parentTreeId, fact) {
     //1. delete current addNewNode button
     var currentNewChildTree = s.graph.nodes(parentTreeId + newChildTreeSuffix);
+    console.log("current new child tree is", currentNewChildTree)
     var newChildTreeX = parseInt(currentNewChildTree.x);
     var newChildTreeY = parseInt(currentNewChildTree.y);
     var tree = new Tree(fact.id, parentTreeId, newChildTreeX, newChildTreeY)
