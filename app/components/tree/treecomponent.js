@@ -19,6 +19,7 @@ export default {
                 setInterval(function(){
                     self.x++
                     self.y = self.y + 2
+                    console.log('fact is', fact.usersTimeMap)
                     fact.timeElapsedForCurrentUser = fact.timeElapsedForCurrentUser || 0
                     fact.timeElapsedForCurrentUser++ // = fact.timeElapsedForCurrentUser || 0
                     // console.log('increment', self.x, self.y)
@@ -33,6 +34,12 @@ export default {
             , y: 7
             , tree: self.tree
             , fact: self.fact
+        }
+    },
+    methods: {
+        saveTimer() {
+            console.log('save timer called')
+            this.fact.setTimerForUser(this.fact.timeElapsedForCurrentUser)
         }
     },
     computed: {
