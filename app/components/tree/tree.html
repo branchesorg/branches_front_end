@@ -1,23 +1,14 @@
 <div>
-    <!--<span> {{movie}} </span>-->
-    <!--<span> {{x}} {{y}}</span>-->
-    <!--<span> {{id}} {{y}}</span>-->
-    <div> tree id: {{tree.id}}</div>
-    <div> fact id: {{tree.factId}}</div>
-    <div> fact question: {{fact.question}}</div>
-    <div> fact answer: {{fact.answer}}</div>
-    <div> another var {{anothervar}}</div>
     <!--<div> fact question: {{// fact.question}}</div>-->
+    <div class="tree-current-fact-timer">{{fact.timeElapsedForCurrentUser}}</div>
     <div class="tree-current-fact">
-        <div>{{fact.timeElapsedForCurrentUser}}</div>
-        <button :click="saveTimer()">Save Timer</button>
-        <!--<input type="text" class="tree-current-fact-id" value="{{fact.id}}" hidden>-->
+        <button v-on:click="saveTimer">Save Timer</button>
+        <input type="text" class="tree-current-fact-id" :value="fact.id" hidden>
         <!--<div>Time: {{treeCtrl.secondsElapsedForUser}}</div>-->
         <!--<div> Scope only arg: {{treeCtrl.testscopeonlyarg}}</div>-->
         <!--<button class="tree-current-fact-timer-end" ng-click="treeCtrl.pauseTimer(event)">Pause/Save Timer</button>-->
-        <!--<div class="tree-current-fact-timer">{{treeCtrl.fact.timeElapsedForCurrentUser}} seconds </div>-->
-        <!--<div class="tree-current-fact-question">{{treeCtrl.fact.question}}</div>-->
-        <!--<div class="tree-current-fact-answer">{{treeCtrl.fact.answer}}</div>-->
+        <div class="tree-current-fact-question">{{fact.question}}</div>
+        <div class="tree-current-fact-answer">{{fact.answer}}</div>
     </div>
     <!--<div class="tree-new-fact" ng-if="treeCtrl.editMode">-->
         <!--<input class="tree-id" ng-model="treeCtrl.id" type="hidden">-->

@@ -1,72 +1,42 @@
 import {Trees} from '../../objects/trees'
 import {Facts} from '../../objects/facts'
+import timers from './timers'
 export default {
     template: require('./tree.html'), // '<div> {{movie}} this is the tree template</div>',
     props: ['movie', 'id'],
     created () {
-        this.anothervar = 25
-       console.log('new tree node created', ...arguments)
         var self = this;
 
-        this.tree = {}
+        this.tree = {} // init to empty object until promises resolve, so vue does not complain
         this.fact = {}
         Trees.get(this.id).then( (tree) => {
             self.tree = tree
             Facts.get(tree.factId).then((fact) =>{
                 self.fact = fact
-                console.log('fact is', fact)
 
-                setInterval(function(){
-                    self.x++
-                    self.y = self.y + 2
-                    console.log('fact is', fact.usersTimeMap)
-                    fact.timeElapsedForCurrentUser = fact.timeElapsedForCurrentUser || 0
-                    fact.timeElapsedForCurrentUser++ // = fact.timeElapsedForCurrentUser || 0
-                    // console.log('increment', self.x, self.y)
-                }, 1000)
+                if (!timers[fact.id]){ // to prevent two timers from being set on the same fact simultaneously (two back to back mousevers in sigmajs will do that, causing two seconds to increment every one second
+                    setInterval(function(){
+                        fact.timeElapsedForCurrentUser = fact.timeElapsedForCurrentUser || 0
+                        fact.timeElapsedForCurrentUser++ // = fact.timeElapsedForCurrentUser || 0
+                        // console.log('increment', self.x, self.y)
+                    }, 1000)
+
+                    timers[fact.id] = true
+                }
             })
         })
     },
     data () {
-        var self = this;
         return {
-            x: 5
-            , y: 7
-            , tree: self.tree
-            , fact: self.fact
+             tree: this.tree
+            , fact: this.fact
         }
     },
     methods: {
         saveTimer() {
-            console.log('save timer called')
-            this.fact.setTimerForUser(this.fact.timeElapsedForCurrentUser)
+            console.log('save timer called!!!')
+            this.fact.setTimerForUser && this.fact.setTimerForUser(this.fact.timeElapsedForCurrentUser)
+            timers[this.fact.id] = false
         }
     },
-    computed: {
-        // treeid() {
-        //     return {
-        //         one: this.x + 'ec535',
-        //         two: this.y + 'ec535',
-        //     }
-        // }
-    },
-    asyncComputed: {
-      // tree () {
-      //     var self = this
-      //     return Trees.get(this.id).then( (tree) => {
-      //        Facts.get(tree.factId).then((fact) =>{
-      //            self.fact = fact
-      //            console.log('fact is', fact)
-      //        })
-      //         return tree
-      //     })
-      //     // const total = this.x + this.y
-      //     // return new Promise(resolve =>
-      //     //   setTimeout(() => resolve(total), 1000)
-      //     // )
-      // },
-        // fact() {
-        //   return Facts.get(this.tree.factId) //this.tree.then(tree => Facts.get(tree.factId))
-        // }
-    }
 }
