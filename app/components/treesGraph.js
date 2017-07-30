@@ -7,6 +7,7 @@ import './newTreeController'
 import '../core/login.js'
 import PubSub from 'pubsub-js'
 import TreeVue from '../components/tree/tree.vue'
+import TreeComponent from './tree/treecomponent'
 import Vue from 'vue'
 var initialized = false;
 var s,
@@ -39,7 +40,7 @@ var toolTipsConfig = {
                             template = '<tree class="tree" testarg="24" tree="' + nodeInEscapedJsonForm + '" anothertestvar="97" anothertestvarr="87" testscopeonlyarg="10" message="' + node.fact.timeElapsedForCurrentUser + '"></tree>'
                         }
                         else if (Config.framework == 'vue') {
-                            template = '<tree class="tree">THIS IS A TREE</tree>'
+                            template = '<div id="vue"><tree movie="spiderman"></tree></div>'
                         }
                         break;
                     case 'newChildTree':
@@ -188,14 +189,24 @@ function printNodeInfo(e){
 function hoverOverNode(e){
     var node = e.data.node
     console.log('hover over node for node with id', node.id, 'just called')
-    Trees.get(node.id).then(tree => Facts.get(tree.factId).then(fact => fact.continueTimer()))
+    // Trees.get(node.id).then(tree => Facts.get(tree.factId).then(fact => fact.continueTimer()))
     tooltips.open(node, toolTipsConfig.node[0], node["renderer1:x"], node["renderer1:y"]);
     setTimeout(function(){
         var treeNodeDom = document.querySelector('.tree')
         if (Config.framework == 'angular1'){
             angular.bootstrap(treeNodeDom, ['branches'])
         } else {
-            var v = new Vue({el: '.tree', render: h => h(TreeVue)})
+            Vue.component('tree', TreeComponent)
+            // {
+            //     template: require('./tree/tree.html'), // '<div> {{movie}} this is the tree template</div>',
+            //     props: ['movie']
+            //     // render: h => h(TreeVue)
+            // })
+            var vm = new Vue(
+                {
+                    el: '#vue'
+                }
+            )
         }
     },0)//push this bootstrap function to the end of the callstack so that it is called after mustace does the tooltip rendering
 }
