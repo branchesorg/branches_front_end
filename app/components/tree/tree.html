@@ -1,15 +1,28 @@
 <div>
-    <div class="tree-current-fact-timer">{{fact.timeElapsedForCurrentUser}}</div>
-    <div class="tree-current-fact" v-if="!editing">
-        <input type="text" class="tree-current-fact-id" :value="fact.id" hidden>
-        <div class="tree-current-fact-question">{{fact.question}}</div>
-        <div class="tree-current-fact-answer">{{fact.answer}}</div>
+    <div class="tree-timer">{{content.timeElapsedForCurrentUser}}</div>
+    <div class="tree-fact" v-if="typeIsFact">
+        <div class="tree-current-fact" v-if="!editing">
+            <input type="text" class="tree-current-fact-id" :value="content.id" hidden>
+            <div class="tree-current-fact-question">{{content.question}}</div>
+            <div class="tree-current-fact-answer">{{content.answer}}</div>
+        </div>
+        <div class="tree-new-fact" v-if="editing">
+            <input class="tree-id" v-model="content.id">
+            <input class="tree-new-fact-question" v-model="content.question">
+            <input class="tree-new-fact-answer" v-model="content.answer">
+            <button class="fact-new-save" v-on:click="changeFactForTree">Save</button>
+        </div>
     </div>
-    <div class="tree-new-fact" v-if="editing">
-        <input class="tree-id" v-model="fact.id">
-        <input class="tree-new-fact-question" v-model="fact.question">
-        <input class="tree-new-fact-answer" v-model="fact.answer">
-        <button class="fact-new-save" v-on:click="changeFactForTree">Save</button>
+    <div class="tree-heading" v-if="typeIsHeading">
+        <div class="tree-current-fact" v-if="!editing">
+            <input type="text" class="tree-current-fact-id" :value="content.id" hidden>
+            <div class="tree-current-heading">{{content.heading}}</div>
+        </div>
+        <div class="tree-new-fact" v-if="editing">
+            <input class="tree-id" v-model="content.id">
+            <input class="tree-new-heading" v-model="content.heading">
+            <button class="heading-new-save" v-on:click="changeHeadingForTree">Save</button>
+        </div>
     </div>
     <button v-on:click="toggleEditing">{{editing ? "Stop Editing" : "Edit"}}</button>
 </div>

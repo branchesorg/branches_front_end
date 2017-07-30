@@ -27,6 +27,16 @@ export default {
         return {
              tree: this.tree
             , fact: this.fact
+            , typeIsHeader: false
+            , typeIsFact: true
+        }
+    },
+    computed : {
+        typeIsHeader() {
+            return this.tree.contentType == 'header'
+        },
+        typeIsFact() {
+            return this.tree.contentType == 'fact'
         }
     },
     methods: {
@@ -52,8 +62,25 @@ export default {
         changeFactForTree() {
             this.fact = Facts.create({question: this.fact.question, answer: this.fact.answer})
             this.fact.addTree(this.id)
-            this.tree.changeFact(this.fact.id)
+            // this.tree.changeFact(this.fact.id)
+            this.tree.changeContent(contentId, contentType)
             this.toggleEditing()
+        },
+        changeContent() {
+            let contentItem;
+            switch (this.tree.contentType){
+                case 'fact':
+                    contentItem = ContentItem.create(new Fact({question: this.question, answer: this.answer}))
+                case 'heading':
+                    contentItem = ContentItem.create(new Heading({heading: this.heading}))
+
+            }
         }
-    },
+        changeTypeToFact() {
+            this.tree.contentType == 'fact'
+        },
+        changeTypeToFact() {
+            this.tree.contentType == 'heading'
+        }
+    }
 }

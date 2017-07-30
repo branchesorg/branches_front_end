@@ -6,13 +6,30 @@ export default {
     data () {
         return {
             question: '',
-            answer: ''
+            answer: '',
+            heading: '',
+            type: 'fact'
         }
     },
     methods: {
         createNewTree() {
             console.log('PARENT ID used in CREATENEWTREE in VUE COMPONENT IS', this.parentid)
-            newTree(this.question, this.answer, this.parentid)
+            let contentArgs;
+            switch(this.type) {
+                case 'fact':
+                    contentArgs = {question: this.question, answer: this.answer}
+                    break;
+                case 'heading':
+                    contentArgs = {heading: this.heading}
+                    break;
+            }
+            newTree(this.type, this.parentId, contentArgs)
+        },
+        setTypeToHeading() {
+            this.type = 'heading'
+        },
+        setTypeToFact() {
+            this.type = 'fact'
         }
     }
 }
