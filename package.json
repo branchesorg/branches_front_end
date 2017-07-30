@@ -19,6 +19,7 @@
     "md5": "^2.2.1",
     "pubsub-js": "^1.5.7",
     "vue": "^2.3.4",
+    "vue-async-computed": "^3.2.1",
     "vuefire": "^1.4.3"
   },
   "devDependencies": {

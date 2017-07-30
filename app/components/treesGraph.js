@@ -9,6 +9,8 @@ import PubSub from 'pubsub-js'
 import TreeVue from '../components/tree/tree.vue'
 import TreeComponent from './tree/treecomponent'
 import Vue from 'vue'
+import AsyncComputed from 'vue-async-computed'
+Vue.use(AsyncComputed)
 var initialized = false;
 var s,
     g = {
@@ -40,7 +42,7 @@ var toolTipsConfig = {
                             template = '<tree class="tree" testarg="24" tree="' + nodeInEscapedJsonForm + '" anothertestvar="97" anothertestvarr="87" testscopeonlyarg="10" message="' + node.fact.timeElapsedForCurrentUser + '"></tree>'
                         }
                         else if (Config.framework == 'vue') {
-                            template = '<div id="vue"><tree movie="spiderman"></tree></div>'
+                            template = '<div id="vue"><tree id="1" movie="spiderman"></tree></div>'
                         }
                         break;
                     case 'newChildTree':
