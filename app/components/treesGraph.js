@@ -81,9 +81,11 @@ export function removeTreeFromGraph(treeId){
     return Trees.get(treeId).then(tree => {
         var childPromises = tree.children? Object.keys(tree.children).map(removeTreeFromGraph) : []
         return Promise.all(childPromises).then((val) => {
+            s.refresh()
             return `removed all children of ${treeId}`
         })
     })
+
 }
 //recursively load the entire tree
 // Instantiate sigma:

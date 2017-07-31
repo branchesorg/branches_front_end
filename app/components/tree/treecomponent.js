@@ -5,6 +5,7 @@ import ContentItem from '../../objects/contentItem'
 import timers from './timers'
 import PubSub from 'pubsub-js'
 import {Heading} from "../../objects/heading";
+import {removeTreeFromGraph} from "../treesGraph"
 export default {
     template: require('./tree.html'), // '<div> {{movie}} this is the tree template</div>',
     props: ['movie', 'id'],
@@ -100,6 +101,12 @@ export default {
         },
         changeTypeToFact() {
             this.tree.contentType == 'heading'
+        },
+        unlinkFromParent(){
+            if (confirm("Warning! Are you sure you would you like to delete this tree?")){
+                this.tree.unlinkFromParent()
+            }
+            removeTreeFromGraph(this.id)
         }
     }
 }
