@@ -80,7 +80,7 @@ export function removeTreeFromGraph(treeId){
     s.graph.dropNode(treeId + newChildTreeSuffix)
     return Trees.get(treeId).then(tree => {
         var childPromises = tree.children? Object.keys(tree.children).map(removeTreeFromGraph) : []
-        return Promise.all(childPromises).then((val) => {
+        return Promise.all(childPromises).then(val => {
             s.refresh()
             return `removed all children of ${treeId}`
         })
@@ -105,7 +105,7 @@ function createTreeNodeFromTreeAndContent(tree, content){
     return node;
 }
 function getLabelFromContent(content) {
-    switch (content.contentType){
+    switch (content.type){
         case "fact":
             return content.question
         case "heading":
