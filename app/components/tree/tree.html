@@ -1,4 +1,8 @@
 <div>
+    <div> EDITING: {{editing}}</div>
+    <div> TYPE IS FACT: {{typeIsFact}}</div>
+    <div> TYPE IS HEADING: {{typeIsHeading}}</div>
+    <div> CONTENT TYPE: {{tree.contentType}}</div>
     <div class="tree-timer">{{content.timeElapsedForCurrentUser}}</div>
     <div class="tree-fact" v-if="typeIsFact">
         <div class="tree-current-fact" v-if="!editing">
@@ -16,7 +20,7 @@
     <div class="tree-heading" v-if="typeIsHeading">
         <div class="tree-current-fact" v-if="!editing">
             <input type="text" class="tree-current-fact-id" :value="content.id" hidden>
-            <div class="tree-current-heading">{{content.title}}</div>
+            <div class="tree-current-heading">HEADING: {{content.title}}</div>
         </div>
         <div class="tree-new-fact" v-if="editing">
             <input class="tree-id" v-model="content.id">

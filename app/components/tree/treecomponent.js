@@ -40,6 +40,7 @@ export default {
         return {
              tree: this.tree
             , content: this.content
+            , editing: this.editing
         }
     },
     computed : {
