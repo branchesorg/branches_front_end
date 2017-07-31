@@ -7,7 +7,7 @@ export default {
         return {
             question: '',
             answer: '',
-            heading: '',
+            title: '',
             type: 'fact'
         }
     },
@@ -28,7 +28,7 @@ export default {
                     contentArgs = {question: this.question, answer: this.answer}
                     break;
                 case 'heading':
-                    contentArgs = {heading: this.title}
+                    contentArgs = {title: this.title}
                     break;
             }
             newTree(this.type, this.parentid, contentArgs)
