@@ -16,7 +16,7 @@
     <div class="tree-heading" v-if="typeIsHeading">
         <div class="tree-current-fact" v-if="!editing">
             <input type="text" class="tree-current-fact-id" :value="content.id" hidden>
-            <div class="tree-current-heading">{{content.heading}}</div>
+            <div class="tree-current-heading">{{content.title}}</div>
         </div>
         <div class="tree-new-fact" v-if="editing">
             <input class="tree-id" v-model="content.id">

@@ -8,6 +8,7 @@ export default {
     template: require('./tree.html'), // '<div> {{movie}} this is the tree template</div>',
     props: ['movie', 'id'],
     created () {
+        console.log('TREE COMPONENT CREATED', this)
         var self = this;
 
         this.editing = false
@@ -16,7 +17,9 @@ export default {
         this.content = {}
         Trees.get(this.id).then(tree => {
             self.tree = tree
+            console.log('TREE COMPONENT: Tree just gotten', tree)
             ContentItem.get(tree.contentId).then(content => {
+                console.log('TREE COMPONENT: content just gotten', content)
                 self.content = content
                 self.startTimer()
             })
@@ -36,7 +39,7 @@ export default {
     data () {
         return {
              tree: this.tree
-            , fact: this.fact
+            , content: this.content
         }
     },
     computed : {
