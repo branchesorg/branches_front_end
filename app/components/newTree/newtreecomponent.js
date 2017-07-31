@@ -31,7 +31,7 @@ export default {
                     contentArgs = {heading: this.title}
                     break;
             }
-            newTree(this.type, this.parentId, contentArgs)
+            newTree(this.type, this.parentid, contentArgs)
         },
         setTypeToHeading() {
             this.type = 'heading'

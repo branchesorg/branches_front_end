@@ -6,7 +6,7 @@ export class Heading extends ContentItem {
 
     constructor ({title}){
         super();
-        this.contentType = 'heading';
+        this.type = 'heading';
 
         this.title = title;
         this.id = md5(JSON.stringify({title}));

@@ -6,7 +6,7 @@ export class Fact extends ContentItem {
   //constructor is used when LOADING facts from db or when CREATING facts from Facts.create
   constructor ({question, answer, id, usersTimeMap, trees}){
       super()
-      this.contentType = 'fact'
+      this.type = 'fact'
     this.question = question;
     this.answer = answer;
     this.id = id || md5(JSON.stringify({question: question, answer: answer}));

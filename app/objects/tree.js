@@ -10,6 +10,7 @@ function loadObject(treeObj, self){
 export class Tree {
 
     constructor(contentId, contentType, parentId, x, y) {
+        console.log('tree.js 13 called: ', arguments)
         var treeObj
         if (arguments[0] && typeof arguments[0] === 'object'){
             treeObj = arguments[0]
@@ -46,6 +47,7 @@ export class Tree {
      * @param treeId
      */
     addChild(treeId) {
+        console.log('add child called in tree.js')
         // this.treeRef.child('/children').push(treeId)
         var children = this.children || {}
         children[treeId] = true
