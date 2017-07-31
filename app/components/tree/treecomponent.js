@@ -75,7 +75,7 @@ export default {
                     contentItem = ContentItem.create(new Heading({heading: this.heading}))
 
             }
-        }
+        },
         changeTypeToFact() {
             this.tree.contentType == 'fact'
         },
