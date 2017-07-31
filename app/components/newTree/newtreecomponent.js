@@ -21,7 +21,6 @@ export default {
     },
     methods: {
         createNewTree() {
-            console.log('PARENT ID used in CREATENEWTREE in VUE COMPONENT IS', this.parentid)
             let contentArgs;
             switch(this.type) {
                 case 'fact':

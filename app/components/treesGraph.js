@@ -234,14 +234,11 @@ function updateTreePosition(e){
 
 //returns sigma tree node
 export function addTreeToGraph(parentTreeId, content) {
-    console.log('addTree to graph called with', ...arguments)
     //1. delete current addNewNode button
     var currentNewChildTree = s.graph.nodes(parentTreeId + newChildTreeSuffix);
-    console.log("current new child tree is", currentNewChildTree)
     var newChildTreeX = parseInt(currentNewChildTree.x);
     var newChildTreeY = parseInt(currentNewChildTree.y);
     var tree = new Tree(content.id, content.type, parentTreeId, newChildTreeX, newChildTreeY)
-    console.log('treesGraph.js 241:  tree just created is', tree)
     //2. add new node to parent tree on UI
     const newTree = {
         id: tree.id,

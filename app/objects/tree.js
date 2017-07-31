@@ -3,6 +3,7 @@ import firebase from './firebaseService.js';
 const treesRef = firebase.database().ref('trees');
 const trees = {};
 import {Trees} from './trees.js'
+import timers from './timers'
 
 function loadObject(treeObj, self){
     Object.keys(treeObj).forEach(key => self[key] = treeObj[key])
@@ -10,7 +11,6 @@ function loadObject(treeObj, self){
 export class Tree {
 
     constructor(contentId, contentType, parentId, x, y) {
-        console.log('tree.js 13 called: ', arguments)
         var treeObj
         if (arguments[0] && typeof arguments[0] === 'object'){
             treeObj = arguments[0]
@@ -84,6 +84,7 @@ export class Tree {
            factId: newfactid
         })
     }
+
 
     /**
      * Change the content of a given node ("Tree")

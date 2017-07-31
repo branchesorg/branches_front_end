@@ -10,7 +10,6 @@ export default {
     template: require('./tree.html'), // '<div> {{movie}} this is the tree template</div>',
     props: ['movie', 'id'],
     created () {
-        console.log('TREE COMPONENT CREATED', this)
         var self = this;
 
         this.editing = false
@@ -19,9 +18,7 @@ export default {
         this.content = {}
         Trees.get(this.id).then(tree => {
             self.tree = tree
-            console.log('TREE COMPONENT: Tree just gotten', tree)
             ContentItem.get(tree.contentId).then(content => {
-                console.log('TREE COMPONENT: content just gotten', content)
                 self.content = content
                 self.startTimer()
             })
@@ -35,6 +32,7 @@ export default {
         //     })
         // })
         PubSub.subscribe('canvas.clicked', () => {
+            console.log('canvas clicked!')
             self.saveTimer()
         })
     },
@@ -55,20 +53,11 @@ export default {
     },
     methods: {
         startTimer() {
-            var self = this
-            if (!timers[this.content.id]){ // to prevent two timers from being set on the same fact simultaneously (two back to back mousevers in sigmajs will do that, causing two seconds to increment every one second
-                setInterval(function(){
-                    self.content.timeElapsedForCurrentUser = self.content.timeElapsedForCurrentUser || 0
-                    self.content.timeElapsedForCurrentUser++ // = fact.timeElapsedForCurrentUser || 0
-                    // console.log('increment', self.x, self.y)
-                }, 1000)
-
-                timers[this.content.id] = true
-            }
+            console.log()
+            this.content.startTimer()
         },
         saveTimer() {
-            this.content.setTimerForUser && this.content.setTimerForUser(this.content.timeElapsedForCurrentUser)
-            timers[this.content.id] = false
+            this.content.saveTimer()
         },
         toggleEditing() {
             this.editing = !this.editing
@@ -84,7 +73,6 @@ export default {
             switch (this.tree.contentType){
                 case 'fact':
                     var fact = new Fact({question: this.content.question, answer: this.content.answer})
-                    console.log("fact created is", fact)
                     this.content = ContentItem.create(fact)
                     break;
                 case 'heading':
