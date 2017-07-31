@@ -16,7 +16,7 @@ export class Fact extends ContentItem {
     this.timeElapsedForCurrentUser = user.loggedIn && this.usersTimeMap && this.usersTimeMap[user.getId()] || 0
     this.timerId = null;
 
-    if(!window.facts[id]) window.facts[id] = this; //TODO: john figure out what this does
+    if(window.facts && !window.facts[id]) window.facts[id] = this; //TODO: john figure out what this does
   }
 
   updateWithUserInfo() {//in case the card was loaded before the user logged in and userTimeElapsed is just a 0 when it actually isnt in the db

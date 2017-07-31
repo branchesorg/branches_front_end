@@ -14,7 +14,7 @@
             <input class="tree-id" v-model="content.id">
             <input class="tree-new-fact-question" v-model="content.question">
             <input class="tree-new-fact-answer" v-model="content.answer">
-            <button class="fact-new-save" v-on:click="changeFactForTree">Save</button>
+            <button class="fact-new-save" v-on:click="changeContent">Save</button>
         </div>
     </div>
     <div class="tree-heading" v-if="typeIsHeading">
@@ -24,8 +24,8 @@
         </div>
         <div class="tree-new-fact" v-if="editing">
             <input class="tree-id" v-model="content.id">
-            <input class="tree-new-heading" v-model="content.heading">
-            <button class="heading-new-save" v-on:click="changeHeadingForTree">Save</button>
+            <input class="tree-new-heading" v-model="content.title">
+            <button class="heading-new-save" v-on:click="changeContent">Save</button>
         </div>
     </div>
     <button v-on:click="toggleEditing">{{editing ? "Stop Editing" : "Edit"}}</button>

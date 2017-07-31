@@ -4,6 +4,7 @@ import {Fact} from '../../objects/fact'
 import ContentItem from '../../objects/contentItem'
 import timers from './timers'
 import PubSub from 'pubsub-js'
+import {Heading} from "../../objects/heading";
 export default {
     template: require('./tree.html'), // '<div> {{movie}} this is the tree template</div>',
     props: ['movie', 'id'],
@@ -79,14 +80,20 @@ export default {
             this.toggleEditing()
         },
         changeContent() {
-            let contentItem;
             switch (this.tree.contentType){
                 case 'fact':
-                    contentItem = ContentItem.create(new Fact({question: this.question, answer: this.answer}))
+                    var fact = new Fact({question: this.content.question, answer: this.content.answer})
+                    console.log("fact created is", fact)
+                    this.content = ContentItem.create(fact)
+                    break;
                 case 'heading':
-                    contentItem = ContentItem.create(new Heading({heading: this.heading}))
-
+                    this.content = ContentItem.create(new Heading({title: this.content.title}))
+                    break;
             }
+            this.content.addTree(this.id)
+            this.tree.changeContent(this.content.id, this.tree.contentType)
+
+            this.toggleEditing()
         },
         changeTypeToFact() {
             this.tree.contentType == 'fact'

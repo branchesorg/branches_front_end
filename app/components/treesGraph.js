@@ -107,7 +107,7 @@ function getLabelFromContent(content) {
         case "fact":
             return content.question
         case "heading":
-            return content.heading
+            return content.title
     }
 }
 function createEdgeId(nodeOneId, nodeTwoId){

@@ -9,7 +9,7 @@ export class Heading extends ContentItem {
         this.contentType = 'heading';
 
         this.title = title;
-        this.id = md5(JSON.stringify({text}));
+        this.id = md5(JSON.stringify({title}));
         this.trees = {}
     }
 

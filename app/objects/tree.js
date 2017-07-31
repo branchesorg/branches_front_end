@@ -87,7 +87,7 @@ export class Tree {
      * Change the content of a given node ("Tree")
      * Available content types currently header and fact
      */
-    changeTreeContent(contentId, contentType) {
+    changeContent(contentId, contentType) {
         this.contentId = contentId;
         this.contentType = contentType;
         firebase.database().ref('trees/' + this.id).update({
