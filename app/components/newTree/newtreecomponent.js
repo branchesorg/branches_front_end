@@ -11,6 +11,14 @@ export default {
             type: 'fact'
         }
     },
+    computed: {
+        contentIsFact () {
+            return this.type == 'fact'
+        },
+        contentIsHeading () {
+            return this.type == 'heading'
+        },
+    },
     methods: {
         createNewTree() {
             console.log('PARENT ID used in CREATENEWTREE in VUE COMPONENT IS', this.parentid)
@@ -20,7 +28,7 @@ export default {
                     contentArgs = {question: this.question, answer: this.answer}
                     break;
                 case 'heading':
-                    contentArgs = {heading: this.heading}
+                    contentArgs = {heading: this.title}
                     break;
             }
             newTree(this.type, this.parentId, contentArgs)
