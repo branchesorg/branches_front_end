@@ -28,19 +28,12 @@ var s,
         "\uF130",
         "\uF131",
         "\uF132"
-    ],
-    glyphs = [
-        {
-            position: positions[0],
-            content: icons[Math.floor(Math.random() * icons.length)],
-            fillColor: '#35ac19',
-            hidden: false
-        }
     ]
 
 
 window.g = g
 window.s = s;
+sigma.settings.font = 'Fredoka One'
 
 var newNodeXOffset = -500,
     newNodeYOffset = 20,
@@ -92,14 +85,12 @@ function onGetTree(tree) {
 function addTreeNodeToGraph(tree,content){
     const treeUINode = createTreeNodeFromTreeAndContent(tree,content)
     g.nodes.push(treeUINode);
-    addNewChildTreeToTree(treeUINode)
     connectTreeToParent(tree,g)
     return content.id
 }
 
 export function removeTreeFromGraph(treeId){
     s.graph.dropNode(treeId)
-    s.graph.dropNode(treeId + newChildTreeSuffix)
     return Trees.get(treeId).then(tree => {
         var childPromises = tree.children? Object.keys(tree.children).map(removeTreeFromGraph) : []
         return Promise.all(childPromises).then(val => {
@@ -124,7 +115,6 @@ function createTreeNodeFromTreeAndContent(tree, content){
         size: 1,
         color: getTreeColor(tree),
         type: 'tree',
-        glyphs
     };
     return node;
 }
@@ -169,35 +159,6 @@ function connectTreeToParent(tree, g){
 }
 //returns a promise whose resolved value will be a stringified representation of the tree's fact and subtrees
 
-function addNewChildTreeToTree(tree){
-    if (tree.children) {
-    }
-    const newChildTree = {
-        id: tree.id + newChildTreeSuffix, //"_newChildTree",
-        parentId: tree.id,
-        x: parseInt(tree.x) + newNodeXOffset + 100,
-        y: parseInt(tree.y) + newNodeYOffset,
-        label: '+',
-        size: 1,
-        color: Globals.newColor,
-        type: 'newChildTree'
-    }
-    const shadowEdge = {
-        id: createEdgeId(tree.id, newChildTree.id),
-        source: tree.id,
-        target: newChildTree.id,
-        size: 1,
-        color: Globals.newColor
-    };
-    if (!initialized) {
-        g.nodes.push(newChildTree)
-        g.edges.push(shadowEdge)
-    } else {
-        s.graph.addNode(newChildTree)
-        s.graph.addEdge(shadowEdge)
-        s.refresh()
-    }
-}
 function initSigma(){
     if (initialized) return
 
@@ -279,9 +240,9 @@ function updateTreePosition(e){
 //returns sigma tree node
 export function addTreeToGraph(parentTreeId, content) {
     //1. delete current addNewNode button
-    var currentNewChildTree = s.graph.nodes(parentTreeId + newChildTreeSuffix);
-    var newChildTreeX = parseInt(currentNewChildTree.x);
-    var newChildTreeY = parseInt(currentNewChildTree.y);
+    var parentTree = s.graph.nodes(parentTreeId);
+    var newChildTreeX = parseInt(parentTree.x) + newNodeXOffset;
+    var newChildTreeY = parseInt(parentTree.y) + newNodeYOffset;
     var tree = new Tree(content.id, content.type, parentTreeId, newChildTreeX, newChildTreeY)
     //2. add new node to parent tree on UI
     const newTree = {
@@ -296,11 +257,9 @@ export function addTreeToGraph(parentTreeId, content) {
         size: 1,
         color: Globals.existingColor,
         type: 'tree',
-        glyphs,
     }
     //2b. update x and y location in the db for the tree
 
-    s.graph.dropNode(currentNewChildTree.id)
     s.graph.addNode(newTree);
     //3. add edge between new node and parent tree
     const newEdge = {
@@ -311,11 +270,6 @@ export function addTreeToGraph(parentTreeId, content) {
         color: Globals.existingColor
     }
     s.graph.addEdge(newEdge)
-    //4. add shadow node
-    addNewChildTreeToTree(newTree)
-    //5. Re add shadow node to parent
-    Trees.get(parentTreeId)
-        .then(addNewChildTreeToTree);
 
     s.refresh();
     return newTree;
@@ -330,11 +284,6 @@ function initSigmaPlugins() {
 
     var myRenderer = s.renderers[0];
 
-    myRenderer.glyphs();
-
-    myRenderer.bind('render', function(e) {
-        myRenderer.glyphs();
-    });
     console.log('my renderenr is', myRenderer, s.renderers)
 }
 

@@ -87,6 +87,27 @@
 <i class="fa fa-camera-retro fa-1x" style="color: rgba(0,0,0,0);"></i>
 
 <!-- FB Login -->
+<script>
+    var explorer = false
+
+    if (/MSIE 10/i.test(navigator.userAgent)) {
+       // This is internet explorer 10
+        explorer = true
+    }
+    if (/MSIE 9/i.test(navigator.userAgent) || /rv:11.0/i.test(navigator.userAgent)) {
+    // This is internet explorer 9 or 11
+       explorer = true
+    }
+    if (/Edge\/\d./i.test(navigator.userAgent)){
+    // This is Microsoft Edge
+        explorer = true
+    }
+    if (explorer) {
+        alert("Internet Explorer / Edge not supported! Use Chrome or Firefox. Things you wont' be able to do in IE/Edge: 1) Editing facts is harder, because you cant resize the textarea box. 2) Other stuff")
+    }
+</script>
+
+
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];

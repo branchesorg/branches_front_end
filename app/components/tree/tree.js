@@ -14,6 +14,7 @@ export default {
         var me = this;
 
         this.editing = false
+        this.addingChild = false
         this.tree = {} // init to empty object until promises resolve, so vue does not complain
         this.fact = {}
         this.content = {}
@@ -55,6 +56,7 @@ export default {
              tree: this.tree
             , content: this.content
             , editing: this.editing
+            , addingChild: this.addingChild
         }
     },
     computed : {
@@ -88,6 +90,9 @@ export default {
         toggleEditing() {
             this.editing = !this.editing
         },
+        toggleAddChild() {
+            this.addingChild = !this.addingChild
+        },
         setProficiencyToOne() {
             this.content.setProficiency(0)
         },
@@ -99,6 +104,9 @@ export default {
         },
         setProficiencyToFour() {
             this.content.setProficiency(100)
+        },
+        toggleAddChild(){
+            this.addingChild = !this.addingChild
         },
         //global methods
         changeContent() {
