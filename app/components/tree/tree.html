@@ -36,7 +36,7 @@
     <div class="tree-footer">
         <div class="divider-horizontal"></div>
         <div class="tree-footer-row">
-            <div class="tree-edit-button" v-on:mouseover="toggleEditing" v-on:click="toggleEditing">
+            <div class="tree-edit-button" v-on:click="toggleEditing">
                 <i :class="{'tree-edit-button': true, 'fa': true, 'fa-pencil-square-o': !editing, 'fa-book': editing}" aria-hidden="true"></i>
             </div>
             <div class="tree-add-child-button" v-on:mouseover="toggleAddChild" v-on:click="toggleAddChild">

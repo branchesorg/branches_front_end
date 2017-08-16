@@ -102,7 +102,7 @@ html, .tree, button {
 .header {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items:center;
 }
 .tree-proficiency-values-one {
@@ -144,6 +144,10 @@ html, .tree, button {
 }
 .tree-current-fact-question {
     padding-bottom: 4px;
+}
+.header-photo {
+    width: 25px;
+    height: 25px;
 }
 .tree-new-fact {
     display: flex;
