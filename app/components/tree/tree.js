@@ -18,9 +18,6 @@ export default {
 
         this.editing = false
         this.addingChild = false
-        // this.tree = {} // init to empty object until promises resolve, so vue does not complain
-        // this.fact = {}
-        // this.content = {}
         this.nodeBeingDragged = false
         this.tree = await Trees.get(this.id)
         this.content = await ContentItems.get(this.tree.contentId)
