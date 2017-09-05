@@ -1,3 +1,4 @@
+import {PROFICIENCIES} from '../proficiencyEnum'
 //TODO: take into account if a user reviews the card to early - e.g. a user shouldn't be able to click "All the way baby" 5 times
 function calculateMinutesTilNextReview(interactionsList){
     var minutesTilNextReview;
@@ -39,15 +40,15 @@ const DAYYYAAAMN = 4
 
 function getProficiencyCategory(proficiency){
     //0 to 32
-    if (proficiency < 33) {
+    if (proficiency <= PROFICIENCIES.ONE) {
         return USER_SUCKS
     }
     //33 to 65
-    else if (proficiency < 66) {
+    else if (proficiency <= PROFICIENCIES.TWO) {
         return USER_OK
     }
     //66 to 94
-    else if (proficiency < 95){
+    else if (proficiency <= PROFICIENCIES.THREE){
         return USERS_AIGHT
     }
     //95 to 100
