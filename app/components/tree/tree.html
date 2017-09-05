@@ -21,18 +21,25 @@
         </div>
     </div>
     <div class="tree-heading" v-if="typeIsHeading">
-        {{numChildren}}
-        {{tree.id}} --
-        {{tree.proficiencyStats.UNKNOWN}} --
-        {{tree.proficiencyStats.ONE}} --
-        {{tree.proficiencyStats.TWO}} --
-        {{tree.proficiencyStats.THREE}} --
-        {{tree.proficiencyStats.FOUR}} --
-        TIMER: {{tree.aggregationTimer}}
+        <!--{{numChildren}}-->
+        <!--{{tree.id}} &#45;&#45;-->
+        <!--{{tree.proficiencyStats.UNKNOWN}} &#45;&#45;-->
+        <!--{{tree.proficiencyStats.ONE}} &#45;&#45;-->
+        <!--{{tree.proficiencyStats.TWO}} &#45;&#45;-->
+        <!--{{tree.proficiencyStats.THREE}} &#45;&#45;-->
+        <!--{{tree.proficiencyStats.FOUR}} &#45;&#45;-->
         <!--<button v-on:click="recalculateProficiencyAggregation">Recalculate Proficiency Aggregation</button>-->
         <div class="tree-current-heading" v-show="!editing">
             <input type="text" class="tree-current-fact-id" :value="content.id" hidden>
             <div class="tree-current-heading">{{content.title}}</div>
+            <div class="tree-current-heading-timer">{{tree.aggregationTimer | secondsToPretty}}</div>
+            <span class="tree-current-heading-numProficiencies">
+                <span class="tree-proficiency-unknown-text">{{tree.proficiencyStats.UNKNOWN}}</span>
+                <span class="tree-proficiency-one-text">{{tree.proficiencyStats.ONE}}</span>
+                <span class="tree-proficiency-two-text">{{tree.proficiencyStats.TWO}}</span>
+                <span class="tree-proficiency-three-text">{{tree.proficiencyStats.THREE}}</span>
+                <span class="tree-proficiency-four-text">{{tree.proficiencyStats.FOUR}}</span>
+            </span>
         </div>
         <div class="tree-new-heading" v-show="editing">
             <input class="tree-id" v-model="content.id" hidden>
@@ -69,7 +76,7 @@
             <div class="tree-add-child-button" v-show="typeIsHeading" v-on:click="toggleAddChild">
                 <i :class="{'tree-edit-button': true, 'fa': true, 'fa-plus-square-o': !addingChild, 'fa-minus-square-o': addingChild}" aria-hidden="true"></i>
             </div>
-            <div class="tree-timer" :title="timerMouseOverMessage" >{{content.timer | secondsToPretty}} </div>
+            <div class="tree-timer" :title="timerMouseOverMessage"  v-if="!typeIsHeading">{{content.timer | secondsToPretty}} </div>
             <!--<div class="tree-proficiency-value" title="proficiency"> {{content.proficiency}}% </div>-->
             <i class="tree-delete-button fa fa-trash-o" aria-hidden="true" v-if="user.isAdmin()" v-on:click="remove" ></i>
         </div>

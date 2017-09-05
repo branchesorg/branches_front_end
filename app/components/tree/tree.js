@@ -62,7 +62,14 @@ export default {
         },
         styleObject(){
             const styles = {}
-            styles['background-color'] = proficiencyToColor(this.content.proficiency)
+            if (this.typeIsHeading){
+                console.log('this type is heading')
+                styles['background-color'] = 'black'; //proficiencyToColor(this.content.proficiency)
+                styles['color'] = 'white'; //proficiencyToColor(this.content.proficiency)
+            }else {
+                console.log('this type is NOT heading')
+                styles['background-color'] = proficiencyToColor(this.content.proficiency)
+            }
             return styles
         },
         timerMouseOverMessage(){
