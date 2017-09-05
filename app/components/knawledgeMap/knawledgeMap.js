@@ -78,16 +78,6 @@ function createTreeNodeFromTreeAndContent(tree, content, level){
     node.size = 1
     node.color = getTreeColor(content)
     node.type = 'tree'
-
-    // const node = {
-    //     ...tree,
-    //     level,
-    //     content: content,
-    //     label: getLabelFromContent(content),
-    //     size: 1,
-    //     color: getTreeColor(content),
-    //     type: 'tree',
-    // };
     return node;
 }
 
@@ -162,44 +152,6 @@ function connectTreeToParent(tree,content, g){
             s.graph.addEdge(edge)
         }
     }
-}
-//returns sigma tree node
-export function addTreeToGraph(parentTreeId, content) {
-    //1. delete current addNewNode button
-    var parentTree = s.graph.nodes(parentTreeId);
-    var newChildTreeX = parseInt(parentTree.x) + newNodeXOffset;
-    var newChildTreeY = parseInt(parentTree.y) + newNodeYOffset;
-    var tree = new Tree(content.id, content.type, parentTreeId, parentTree.degree + 1, newChildTreeX, newChildTreeY)
-    //2. add new node to parent tree on UI
-    const newTree = {
-        id: tree.id,
-        parentId: parentTreeId,
-        contentId: content.id,
-        content: content,
-        x: newChildTreeX,
-        y: newChildTreeY,
-        children: {},
-        label: getLabelFromContent(content),
-        size: 1,
-        color: getTreeColor(content),
-        type: 'tree',
-    }
-    console.log('label in addTreeToGraph is', newTree.label)
-
-    s.graph.addNode(newTree);
-    //3. add edge between new node and parent tree
-    const newEdge = {
-        id: createEdgeId(parentTreeId, newTree.id),
-        source: parentTreeId,
-        target: newTree.id,
-        size: 5,
-        color: getTreeColor(content),
-        type: EDGE_TYPES.HIERARCHICAL,
-    }
-    s.graph.addEdge(newEdge)
-
-    s.refresh();
-    return newTree;
 }
 
 function initKnawledgeMap(treeIdToJumpTo){

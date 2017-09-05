@@ -1,5 +1,5 @@
 import merge from 'lodash.merge'
-import {addTreeNodeToGraph, addTreeToGraph} from '../components/knawledgeMap/knawledgeMap'
+import {addTreeNodeToGraph} from '../components/knawledgeMap/knawledgeMap'
 import {Trees} from './trees'
 
 import ContentItems from "./contentItems";
@@ -40,13 +40,6 @@ export async function newTree(nodeType, parentTreeId,primaryParentTreeContentURI
     parentTree.addChild(tree.id)
     newContent.addTree(tree.id)
     addTreeNodeToGraph(tree,newContent, level)
-    //
-    //
-    // console.log('new content just created is', newContent)
-    // const tree = addTreeToGraph(parentTreeId, newContent);
-    // console.log('new Tree created is', tree)
     // //TODO add a new tree to db and UI by dispatching a new Tree REDUX action
     // //TODO: ^^^ and that action should use the Trees/Tree ORMs we have rather than manually using the db api (bc we may want to swap out db)
-    // Trees.get(parentTreeId).then(parentTree => {
-    // });
 }
