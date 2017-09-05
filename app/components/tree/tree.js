@@ -1,5 +1,5 @@
 import {Trees} from '../../objects/trees'
-import {proficiencyToColor, syncGraphWithNode, removeTreeFromGraph} from "../knawledgeMap/knawledgeMap"
+import {proficiencyToColor, syncGraphWithNode, removeTreeFromGraph,refreshGraph} from "../knawledgeMap/knawledgeMap"
 import {Fact} from '../../objects/fact'
 import ContentItems from '../../objects/contentItems'
 
@@ -88,7 +88,7 @@ export default {
         },
         syncProficiency() {
             this.content.saveProficiency() //  this.content.proficiency is already set I think, but not saved in db
-            this.content.recalculateProficiencyAggregationForTreeChain()
+            this.content.recalculateProficiencyAggregationForTreeChain().then(refreshGraph)
             this.syncGraphWithNode()
         },
         syncGraphWithNode(){

@@ -143,7 +143,9 @@ export async function syncGraphWithNode(treeId){
 
     s.refresh()
 }
-
+export function refreshGraph(){
+    s.refresh()
+}
 function connectTreeToParent(tree,content, g){
     if (tree.parentId) {
         const edge = {
