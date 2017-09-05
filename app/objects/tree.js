@@ -6,7 +6,6 @@ const trees = {};
 import {Trees} from './trees.js'
 import ContentItems from './contentItems'
 import {syncGraphWithNode}  from '../components/knawledgeMap/knawledgeMap'
-import timers from './timers'
 import {PROFICIENCIES} from "../components/proficiencyEnum";
 
 function loadObject(treeObj, self){
@@ -35,6 +34,7 @@ export class Tree {
             treeObj = arguments[0]
             loadObject(treeObj, this)
             this.proficiencyStats = this.userProficiencyStatsMap && this.userProficiencyStatsMap[user.getId()] || unknownProficiencyStats
+            this.aggregationTimer = this.userAggregationTimerMap && this.userAggregationTimerMap[user.getId()] || 0
             return
         }
 
@@ -42,8 +42,12 @@ export class Tree {
         this.contentType = contentType
         this.parentId = parentId;
         this.children = {};
+
         this.userProficiencyStatsMap = {}
+        this.userAggregationTimerMap = {}
         this.proficiencyStats = this.userProficiencyStatsMap && this.userProficiencyStatsMap[user.getId()] || unknownProficiencyStats
+        this.aggregationTimer = this.userAggregationTimerMap && this.userAggregationTimerMap[user.getId()] || 0
+
 
         this.x = x
         this.y = y
@@ -152,6 +156,17 @@ export class Tree {
         firebase.database().ref('trees/' + this.id).update(updates)
         console.log(this.id, ': set Proficiency Stats called')
     }
+    setAggregationTimer(timer){
+        this.timer = timer
+        this.userAggregationTimerMap = this.userAggregationTimerMap || {}
+        this.userAggregationTimerMap[user.getId()] = this.timer
+
+        const updates = {
+            userAggregationTimerMap: this.userAggregationTimerMap
+        }
+        console.log(this.id, ': set aggregation timer called', updates, JSON.stringify(updates))
+        firebase.database().ref('trees/' + this.id).update(updates)
+    }
 
     /**
      * Change the content of a given node ("Tree")
@@ -249,6 +264,43 @@ export class Tree {
         const parent = await Trees.get(this.parentId)
         return parent.recalculateProficiencyAggregation()
     }
+    async calculateAggregationTimerForLeaf(){
+        let contentItem = await ContentItems.get(this.contentId)
+        console.log("calculateAggregationTimerForLeaf timer is", contentItem.timer)
+        return contentItem.timer
+    }
+    async calculateAggregationTimerForNotLeaf(){
+        let timer = 0
+        if (!this.children || !Object.keys(this.children).length) return timer
+        const children = await Promise.all(
+            Object.keys(this.children)
+                .map(Trees.get)
+                .map(async childPromise => await childPromise)
+        )
+
+        children.forEach(child => {
+            timer += +child.aggregationTimer
+            console.log('child timer is', child.aggregationTimer, 'timer is now', timer)
+        })
+        console.log("calculateAggregationTimerForNotLeaf timer is", timer)
+        return timer
+    }
+    async calculateAggregationTimer(){
+        let timer;
+        const isLeaf = await this.isLeaf()
+        if (isLeaf){
+            timer = await this.calculateAggregationTimerForLeaf()
+        } else {
+            timer = await this.calculateAggregationTimerForNotLeaf()
+        }
+        console.log("timer about to be passed into setAggregationTimer is", timer)
+        this.setAggregationTimer(timer)
+
+        if (!this.parentId) return
+        const parent = await Trees.get(this.parentId)
+        return parent.calculateAggregationTimer()
+    }
+
 }
 //TODO: get typeScript so we can have a schema for treeObj
 //treeObj  example

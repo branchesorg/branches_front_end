@@ -150,12 +150,14 @@ export default class ContentItem {
     }
         //TODO : make timer for heading be the sum of the time of all the child facts
     startTimer() {
-        var self = this
+        var me = this
+
 
         if (!this.timerId) { //to prevent from two or more timers being created simultaneously on the content item
             this.timerId = setInterval(function () {
-                self.timer  = self.timer || 0
-                self.timer++ // = fact.timer || 0
+                me.timer  = me.timer || 0
+                me.timer++ // = fact.timer || 0
+                me.calculateAggregationTimerForTreeChain()//propagate the time increase all the way up
             }, 1000)
         }
 
@@ -204,6 +206,15 @@ export default class ContentItem {
         const calculationPromises = treePromises.map(async treePromise => {
             const tree = await treePromise
             return tree.recalculateProficiencyAggregation()
+        })
+        return Promise.all(calculationPromises)
+    }
+    calculateAggregationTimerForTreeChain(){
+        const treePromises = this.trees ? Object.keys(this.trees).map(Trees.get)
+            : [] // again with the way we've designed this only one contentItem should exist per tree and vice versa . . .but i'm keeping this for loop here for now
+        const calculationPromises = treePromises.map(async treePromise => {
+            const tree = await treePromise
+            return tree.calculateAggregationTimer()
         })
         return Promise.all(calculationPromises)
     }
