@@ -1,8 +1,9 @@
 import {Trees} from '../../objects/trees'
-import {proficiencyToColor, syncGraphWithNode, removeTreeFromGraph} from "../knawledgeMap/knawledgeMap"
+import {proficiencyToColor, syncGraphWithNode, removeTreeFromGraph,refreshGraph} from "../knawledgeMap/knawledgeMap"
 import {Fact} from '../../objects/fact'
 import ContentItems from '../../objects/contentItems'
 
+import user from '../../objects/user'
 import {Heading} from "../../objects/heading";
 import {secondsToPretty} from "../../core/filters"
 import {Skill} from "../../objects/skill";
@@ -12,25 +13,16 @@ import './tree.less'
 export default {
     template: require('./tree.html'), // '<div> {{movie}} this is the tree template</div>',
     props: ['id'],
-    created () {
+    async created () {
         var me = this;
 
         this.editing = false
         this.addingChild = false
-        this.tree = {} // init to empty object until promises resolve, so vue does not complain
-        this.fact = {}
-        this.content = {}
         this.nodeBeingDragged = false
-        Trees.get(this.id).then(tree => {
-            me.tree = tree
-            ContentItems.get(tree.contentId).then(content => {
-                me.content = content
-                console.log('content uri in tree.js is', content.uri)
-                // console.log('this.content in tree.js is ', me.content)
-                me.startTimer()
-            })
+        this.tree = await Trees.get(this.id)
+        this.content = await ContentItems.get(this.tree.contentId)
+        this.startTimer()
 
-        })
         //using this pubsub, bc for some reason vue's beforeDestroy or destroy() methods don't seem to be working
         PubSub.subscribe('canvas.closeTooltip',function (eventName, data) {
             if (data.oldNode != me.id) return
@@ -50,11 +42,12 @@ export default {
     },
     data () {
         return {
-             tree: this.tree
-            , content: this.content
-            , editing: this.editing
-            , addingChild: this.addingChild
-            , draggingNode: window.draggingNode
+            tree:{}, //this.tree
+            content: {},// this.content
+            editing: this.editing,
+            addingChild: this.addingChild,
+            draggingNode: window.draggingNode,
+            user,
         }
     },
     computed : {
@@ -69,12 +62,22 @@ export default {
         },
         styleObject(){
             const styles = {}
-            styles['background-color'] = proficiencyToColor(this.content.proficiency)
+            if (this.typeIsHeading){
+                console.log('this type is heading')
+                styles['background-color'] = 'black'; //proficiencyToColor(this.content.proficiency)
+                styles['color'] = 'white'; //proficiencyToColor(this.content.proficiency)
+            }else {
+                console.log('this type is NOT heading')
+                styles['background-color'] = proficiencyToColor(this.content.proficiency)
+            }
             return styles
         },
         timerMouseOverMessage(){
             return "You have spent " + secondsToPretty(this.content.timer) + "studying this item"
-        }
+        },
+        numChildren() {
+            return this.tree && this.tree.children instanceof Object ? Object.keys(this.tree.children).length : 0
+        },
     },
     methods: {
         //user methods
@@ -90,21 +93,13 @@ export default {
         toggleAddChild() {
             this.addingChild = !this.addingChild
         },
+        syncProficiency() {
+            this.content.saveProficiency() //  this.content.proficiency is already set I think, but not saved in db
+            this.content.recalculateProficiencyAggregationForTreeChain().then(refreshGraph)
+            this.syncGraphWithNode()
+        },
         syncGraphWithNode(){
-            this.content.setProficiency(this.content.proficiency)// << it is necessary to call this method . bc we have to set userProficiecnyMap
             syncGraphWithNode(this.tree.id)
-        },
-        setProficiencyToOne() {
-            this.content.setProficiency(PROFICIENCIES.ONE)
-        },
-        setProficiencyToTwo() {
-            this.content.setProficiency(PROFICIENCIES.TWO)
-        },
-        setProficiencyToThree() {
-            this.content.setProficiency(PROFICIENCIES.THREE)
-        },
-        setProficiencyToFour() {
-            this.content.setProficiency(PROFICIENCIES.FOUR)
         },
         toggleAddChild(){
             this.addingChild = !this.addingChild
@@ -130,11 +125,11 @@ export default {
 
             this.toggleEditing()
         },
-        unlinkFromParentAndDeleteContent(){
-            if (confirm("Warning! Are you sure you would you like to delete this tree AND all its children?")){
-                this.tree.unlinkFromParentAndDeleteContent()
+        async remove() {
+            if (confirm("Warning! Are you sure you would you like to delete this tree AND all its children? THIS CANNOT BE UNDONE")){
+                await removeTreeFromGraph(this.id)
+                return this.tree.removeAndDisconnectFromParent()
             }
-            removeTreeFromGraph(this.id)
         }
     }
 }

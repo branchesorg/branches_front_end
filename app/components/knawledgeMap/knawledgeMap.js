@@ -12,15 +12,15 @@ export default {
     props: ['treeId'],
     template: require('./knawledgeMap.html'),
     created () {
-        var me = this;
-        // require('../treesGraph')
-        initKnawledgeMap.call(this, this.treeId)
+        this.init()
     },
-    data () {
-        return {
+    watch: {
+        '$route': 'init',
+    },
+    methods: {
+        init(){
+            initKnawledgeMap.call(this, this.treeId)
         }
-    },
-    computed : {
     }
 }
 
@@ -59,45 +59,38 @@ function getTreeColor(content) {
     const color = proficiencyToColor(proficiency)
     return color
 }
-export function removeTreeFromGraph(treeId){
-    console.log('remove tree called for ', treeId)
+export async function removeTreeFromGraph(treeId){
     s.graph.dropNode(treeId)
-    return Trees.get(treeId).then(tree => {
-        const childPromises = tree.children? Object.keys(tree.children).map(removeTreeFromGraph) : []
-        return Promise.all(childPromises).then(val => {
-            s.refresh()
-            return `removed all children of ${treeId}`
-        })
+    const tree = await Trees.get(treeId)
+    const childPromises = tree.children? Object.keys(tree.children).map(removeTreeFromGraph) : []
+    return Promise.all(childPromises).then(val => {
+        s.refresh()
+        return `removed all children of ${treeId}`
     })
 
 }
 
 function createTreeNodeFromTreeAndContent(tree, content, level){
-    const node = {
-        id: tree.id,
-        parentId: tree.parentId,
-        level,
-        x: tree.x,
-        y: tree.y,
-        children: tree.children,
-        content: content,
-        label: getLabelFromContent(content),
-        size: 1,
-        color: getTreeColor(content),
-        type: 'tree',
-    };
+    var node = tree
+    node.level = level
+    node.content = content
+    node.label = getLabelFromContent(content)
+    node.size = 1
+    node.color = getTreeColor(content)
+    node.type = 'tree'
     return node;
 }
 
 export function addTreeNodeToGraph(tree,content, level){
     const treeUINode = createTreeNodeFromTreeAndContent(tree,content, level)
-    console.log('new tree node is', treeUINode)
     if(!initialized){
         g.nodes.push(treeUINode);
+        connectTreeToParent(tree, content, g)
     } else {
         s.graph.addNode(treeUINode)
+        connectTreeToParent(tree, content, g)
+        s.refresh()
     }
-    connectTreeToParent(tree, content, g)
     return content.id
 }
 
@@ -106,7 +99,6 @@ function getLabelFromContent(content) {
         case "fact":
             return content.question
         case "heading":
-            console.log("contenttitle is", content.title)
             return content.title
         case "skill":
             return content.title
@@ -123,30 +115,27 @@ export function proficiencyToColor(proficiency){
 function createEdgeId(nodeOneId, nodeTwoId){
     return nodeOneId + "__" + nodeTwoId
 }
-export function syncGraphWithNode(treeId){
-    console.log("knawledgeMap.js syncGraphWithNode called",treeId)
-    Trees.get(treeId).then(tree => {
-        console.log("knawledgeMap.js syncGraphWithNode called tree",tree)
-        ContentItems.get(tree.contentId).then(content => {
-            console.log("knawledgeMap.js syncGraphWithNode called content",content, content.proficiency)
-            //update the node
-            var sigmaNode = s.graph.nodes(treeId)
-            sigmaNode.x = tree.x
-            sigmaNode.y = tree.y
-            var color = getTreeColor(content)
-            sigmaNode.color = color
-            console.log('node color is now', color)
+export async function syncGraphWithNode(treeId){
+    const tree = await Trees.get(treeId)
+    const content = await ContentItems.get(tree.contentId)
 
-            //update the edge
-            var edgeId = createEdgeId(tree.parentId, treeId)
-            var sigmaEdge = s.graph.edges(edgeId)
-            sigmaEdge.color = color
+    //update the node
+    var sigmaNode = s.graph.nodes(treeId)
+    sigmaNode.x = tree.x
+    sigmaNode.y = tree.y
+    var color = getTreeColor(content)
+    sigmaNode.color = color
 
-            s.refresh()
-        })
-    })
+    //update the edge
+    var edgeId = createEdgeId(tree.parentId, treeId)
+    var sigmaEdge = s.graph.edges(edgeId)
+    sigmaEdge.color = color
+
+    s.refresh()
 }
-
+export function refreshGraph(){
+    s.refresh()
+}
 function connectTreeToParent(tree,content, g){
     if (tree.parentId) {
         const edge = {
@@ -159,50 +148,10 @@ function connectTreeToParent(tree,content, g){
         };
         if(!initialized){
             g.edges.push(edge);
-            console.log('connect tree to parent just called with edge of', edge, 'via g edges push')
         } else {
             s.graph.addEdge(edge)
-            console.log('connect tree to parent just called with edge of', edge, 'via s graph addEdge')
         }
     }
-}
-//returns sigma tree node
-export function addTreeToGraph(parentTreeId, content) {
-    //1. delete current addNewNode button
-    var parentTree = s.graph.nodes(parentTreeId);
-    var newChildTreeX = parseInt(parentTree.x) + newNodeXOffset;
-    var newChildTreeY = parseInt(parentTree.y) + newNodeYOffset;
-    var tree = new Tree(content.id, content.type, parentTreeId, parentTree.degree + 1, newChildTreeX, newChildTreeY)
-    //2. add new node to parent tree on UI
-    const newTree = {
-        id: tree.id,
-        parentId: parentTreeId,
-        contentId: content.id,
-        content: content,
-        x: newChildTreeX,
-        y: newChildTreeY,
-        children: {},
-        label: getLabelFromContent(content),
-        size: 1,
-        color: getTreeColor(content),
-        type: 'tree',
-    }
-    console.log('label in addTreeToGraph is', newTree.label)
-
-    s.graph.addNode(newTree);
-    //3. add edge between new node and parent tree
-    const newEdge = {
-        id: createEdgeId(parentTreeId, newTree.id),
-        source: parentTreeId,
-        target: newTree.id,
-        size: 5,
-        color: getTreeColor(content),
-        type: EDGE_TYPES.HIERARCHICAL,
-    }
-    s.graph.addEdge(newEdge)
-
-    s.refresh();
-    return newTree;
 }
 
 function initKnawledgeMap(treeIdToJumpTo){
@@ -243,31 +192,36 @@ function initKnawledgeMap(treeIdToJumpTo){
     };
 
     if (typeof PubSub !== 'undefined') {
-        PubSub.subscribe('login', () => {
-            loadTreeAndSubTrees(1, 1).then(val => {
-                initSigma();
-            })
+        PubSub.subscribe('login', async () => {
+            await loadTreeAndSubTrees(1, 1)
+            try {
+                initSigma()
+            } catch (err) {
+                console.error('initSigma Error', err)
+                alert ('The app isn\'t working!! Let me (John) know ASAP via text/call at 513-787-0992')
+            }
         })
     }
-    function loadTreeAndSubTrees(treeId, level){
+    async function loadTreeAndSubTrees(treeId, level){
         //todo: load nodes concurrently, without waiting to connect the nodes or add the fact's informations/labels to the nodes
-        return Trees.get(treeId)
-            .then(tree => {
-                return onGetTree(tree, level)
-            })
-            .catch( err => console.error('trees get err is', err))
+        const tree = await Trees.get(treeId)
+        return onGetTree(tree, level)
     }
 
-    function onGetTree(tree, level) {
-        var contentPromise = ContentItems.get(tree.contentId)
-            .then( function onContentGet(content) {return addTreeNodeToGraph(tree,content, level)})
-            .catch(err => console.error("CONTENTITEMS.get Err is", err))
-
+    async function onGetTree(tree, level) {
+        // var contentPromise = ContentItems.get(tree.contentId)
+        try {
+            const content = await ContentItems.get(tree.contentId)
+            addTreeNodeToGraph(tree, content, level)
+        } catch( err) {
+            console.error("CONTENTITEMS.get Err is", err)
+        }
+            // .then( function onContentGet(content) {return addTreeNodeToGraph(tree,content, level)})
         var childTreesPromises = tree.children ? Object.keys(tree.children).map(child => {
             return loadTreeAndSubTrees(child, level + 1)
         }): []
 
-        return Promise.all([...childTreesPromises, contentPromise])
+        return Promise.all([...childTreesPromises])
     }
 
 
@@ -286,18 +240,53 @@ function initKnawledgeMap(treeIdToJumpTo){
 
         sigma.renderers.def = sigma.renderers.canvas
         sigma.canvas.labels.def = sigma.canvas.labels.prioritizable
-        s = new sigma({
-            graph: g,
-            container: 'graph-container',
-            glyphScale: 0.7,
-            glyphFillColor: '#666',
-            glyphTextColor: 'white',
-            glyphStrokeColor: 'transparent',
-            glyphFont: 'FontAwesome',
-            glyphFontStyle: 'normal',
-            glyphTextThreshold: 6,
-            glyphThreshold: 3
-        });
+        try {
+            s = new sigma({
+                graph: g,
+                container: 'graph-container',
+                glyphScale: 0.7,
+                glyphFillColor: '#666',
+                glyphTextColor: 'white',
+                glyphStrokeColor: 'transparent',
+                glyphFont: 'FontAwesome',
+                glyphFontStyle: 'normal',
+                glyphTextThreshold: 6,
+                glyphThreshold: 3
+            });
+        } catch (err){
+            console.error('error in init KnawledgeMap is ', err)
+            // const nodes = {}
+            // var nodesArr = g.nodes.map(node => {
+            //    nodes[node.id] = true
+            //    return node.id
+            // } )
+            // const sources = {}
+            // var sourcesArr = g.edges.map(edge => {
+            //     sources[edge.source] = true
+            //     return edge.source
+            // })
+            // const targets = {}
+            // var targetsArr = g.edges.map(edge => {
+            //     targets[edge.target] = true
+            //     return edge.target
+            // })
+            // var invalidSources = sourcesArr.filter( s => !nodes[s])
+            // var invalidTargets = targetsArr.filter( t => !nodes[t])
+            // console.error("the following targets are invalid", invalidTargets)
+            // console.error("the following sources are invalid", invalidSources)
+            // console.log("invalid targets instanceof Array", invalidTargets instanceof Array, invalidTargets.map)
+            // const invalidTargetPromises = invalidTargets.map(target =>{
+            //     return Trees.get(target)
+            // })
+            // (async () => {
+            //     console.log('async iife called')
+            //     const targetTrees = await Promise.all(invalidTargetPromises)
+            //     targetTrees.forEach(tree => {
+            //         console.log('invalid target tree is ', tree, tree.id, tree.parentId)
+            //     })
+            // })()
+
+        }
 
         window.s = s;
         var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
@@ -403,30 +392,38 @@ function initKnawledgeMap(treeIdToJumpTo){
             s.refresh()
         })
     }
-    function click_SUGGESTED_CONNECTION(edge){
+    async function click_SUGGESTED_CONNECTION(edge){
+        const childBeingAdoptedId = edge.target
+        const newParentId = edge.source
+
+        Trees.adoptChild(newParentId,childBeingAdoptedId)
+        handleAdoptionProcessUIUpdate(childBeingAdoptedId, newParentId, edge)
+    }
+
+    function handleAdoptionProcessUIUpdate(childBeingAdoptedId, newParentId, edge){
+        const childBeingAdoptedUINode = s.graph.nodes(childBeingAdoptedId)
+        childBeingAdoptedUINode.state = 'normal'
+
         const permanentEdge = {
-            id : createEdgeId(edge.source,edge.target),
-            source: edge.source,
-            target: edge.target,
+            id : createEdgeId(newParentId,childBeingAdoptedId),
+            source: newParentId,
+            target: childBeingAdoptedId,
             type : EDGE_TYPES.HIERARCHICAL,
             color: edge.color,
             size: edge.size,
         }
-        const parentlessNode = s.graph.nodes(edge.target)
-        parentlessNode.state = 'normal'
-        Trees.get(parentlessNode.id).then(tree => {
-            tree.changeParent(edge.source)
-            s.graph.addEdge(permanentEdge)
-            window.awaitingEdgeConnectionNodeId = null
-            window.awaitingEdgeConnection = false
-            removeSuggestedEdges()
-            const originalEdge = s.graph.edges(window.edgeIdBeingChanged)
-            originalEdge && s.graph.dropEdge(originalEdge.id)
-            s.refresh()
-            window.suggestedConnectionClicked = true
-        })
+        s.graph.addEdge(permanentEdge)
+        window.awaitingEdgeConnectionNodeId = null
+        window.awaitingEdgeConnection = false
+        removeSuggestedEdges()
+        const originalEdge = s.graph.edges(window.edgeIdBeingChanged)
+        originalEdge && s.graph.dropEdge(originalEdge.id)
+        s.refresh()
+        window.suggestedConnectionClicked = true
         // PubSub.publish('canvas.parentReconnect.reconnected')
+
     }
+
     function removeEdgeToParent(node){
         var parentId = node.parentId
         var edgeId = createEdgeId(parentId, node.id)
@@ -533,7 +530,8 @@ function initKnawledgeMap(treeIdToJumpTo){
         // PubSub.publish('canvas.closeTooltip') // close any existing tooltips, so as to stop their timers from counting
         // var node = e.data.node
     }
-    function updateTreePosition(data){
+    async function updateTreePosition(data){
+        console.log("update tree Position called")
         let {newX, newY, treeId} = data
         // let newX = e.data.node.x
         // let newY = e.data.node.y
@@ -543,17 +541,16 @@ function initKnawledgeMap(treeIdToJumpTo){
             return; //node isn't an actual node in the db - its like a shadow node or helper node
         }
         const MINIMUM_DISTANCE_TO_UPDATE_COORDINATES = .1
-        Trees.get(treeId).then( tree => {
-            let deltaX = newX - tree.x
-            if (Math.abs(deltaX) > MINIMUM_DISTANCE_TO_UPDATE_COORDINATES ) {
-                tree.addToX({recursion: true, deltaX})
-            }
-            let deltaY = newY - tree.y
-            if (Math.abs(deltaY) > MINIMUM_DISTANCE_TO_UPDATE_COORDINATES ) {
-                tree.addToY({recursion: true, deltaY})
-            }
-            return tree
-        })
+        const tree = await Trees.get(treeId)
+        let deltaX = newX - tree.x
+        if (Math.abs(deltaX) > MINIMUM_DISTANCE_TO_UPDATE_COORDINATES ) {
+            tree.addToX({recursion: true, deltaX})
+        }
+        let deltaY = newY - tree.y
+        if (Math.abs(deltaY) > MINIMUM_DISTANCE_TO_UPDATE_COORDINATES ) {
+            tree.addToY({recursion: true, deltaY})
+        }
+        return tree
     }
 
 
@@ -563,7 +560,7 @@ function initKnawledgeMap(treeIdToJumpTo){
         // var dragListener = sigma.plugins.dragNodes(s, s.renderers[0],activeState);
         window.tooltips = tooltips;
         window.jump = jumpToAndOpenTreeId;
-        jumpToAndOpenTreeId(treeIdToJumpTo || DataKeys.TREE_IDS.AMAR)
+        jumpToAndOpenTreeId(treeIdToJumpTo || DataKeys.TREE_IDS.EVERYDAY_WORDS)
 
         var myRenderer = s.renderers[0];
 

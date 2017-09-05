@@ -33,6 +33,8 @@ export default class ContentItem {
         this.exercises = args.exercises || {}
 
         this.uri = args.uri || null
+
+        this.type = args.type
     }
     init () {
         this.calculateURIBasedOnParentTreeContentURI()
@@ -110,6 +112,9 @@ export default class ContentItem {
 
     }
 
+    isLeafType(){
+        return this.type === 'fact' || this.type === 'skill'
+    }
     /**
      * Used to update tree X and Y coordinates
      * @param prop
@@ -145,12 +150,14 @@ export default class ContentItem {
     }
         //TODO : make timer for heading be the sum of the time of all the child facts
     startTimer() {
-        var self = this
+        var me = this
+
 
         if (!this.timerId) { //to prevent from two or more timers being created simultaneously on the content item
             this.timerId = setInterval(function () {
-                self.timer  = self.timer || 0
-                self.timer++ // = fact.timer || 0
+                me.timer  = me.timer || 0
+                me.timer++ // = fact.timer || 0
+                me.calculateAggregationTimerForTreeChain()//propagate the time increase all the way up
             }, 1000)
         }
 
@@ -193,23 +200,38 @@ export default class ContentItem {
         firebase.database().ref('content/').child(this.id).remove() //delete from db
         delete window.content[this.id]
     }
-    setProficiency(proficiency) {
+    recalculateProficiencyAggregationForTreeChain(){
+        const treePromises = this.trees ? Object.keys(this.trees).map(Trees.get)
+            : [] // again with the way we've designed this only one contentItem should exist per tree and vice versa . . .but i'm keeping this for loop here for now
+        const calculationPromises = treePromises.map(async treePromise => {
+            const tree = await treePromise
+            return tree.recalculateProficiencyAggregation()
+        })
+        return Promise.all(calculationPromises)
+    }
+    calculateAggregationTimerForTreeChain(){
+        const treePromises = this.trees ? Object.keys(this.trees).map(Trees.get)
+            : [] // again with the way we've designed this only one contentItem should exist per tree and vice versa . . .but i'm keeping this for loop here for now
+        const calculationPromises = treePromises.map(async treePromise => {
+            const tree = await treePromise
+            return tree.calculateAggregationTimer()
+        })
+        return Promise.all(calculationPromises)
+    }
+    saveProficiency(){
         !this.inStudyQueue && this.addToStudyQueue()
-        //proficiency
 
-        //-proficiency stored under fact
-        this.proficiency = proficiency
+        //content
         this.userProficiencyMap[user.getId()] = this.proficiency
 
         var updates = {
-           userProficiencyMap : this.userProficiencyMap
+            userProficiencyMap : this.userProficiencyMap
         }
 
         firebase.database().ref('content/' + this.id).update(updates)
 
-
         //interactions
-        this.interactions.push({timestamp: firebase.database.ServerValue.TIMESTAMP, proficiency: proficiency})
+        this.interactions.push({timestamp: firebase.database.ServerValue.TIMESTAMP, proficiency: this.proficiency})
         this.userInteractionsMap[user.getId()] = this.interactions
 
         var updates = {
@@ -218,8 +240,7 @@ export default class ContentItem {
 
         firebase.database().ref('content/' + this.id).update(updates)
 
-        //duplicate some of the information in the user database <<< we should really start using a graph db to avoid this . . .
-        //user review time map
+        //user review time map //<<<duplicate some of the information in the user database <<< we should really start using a graph db to avoid this . . .
         const millisecondsTilNextReview = calculateMillisecondsTilNextReview(this.interactions)
         this.nextReviewTime = Date.now() + millisecondsTilNextReview
 
@@ -229,7 +250,12 @@ export default class ContentItem {
         }
         firebase.database().ref('content/' + this.id).update(updates)
 
-        user.setItemProperties(this.id, {nextReviewTime: this.nextReviewTime, proficiency});
+        user.setItemProperties(this.id, {nextReviewTime: this.nextReviewTime, proficiency: this.proficiency});
+    }
+    setProficiency(proficiency) {
+        //-proficiency stored as part of this content item
+        this.proficiency = proficiency
+        this.saveProficiency()
     }
     //methods for html templates
     isProficiencyUnknown(){

@@ -11,18 +11,18 @@
         <p class="newTree-form">
             <p class="newTree-form tree-fact" v-if="contentIsFact">
                 <input type="hidden" class="newTree-parentId" v-model="parentid">
-                Question: <input class='newTree-question' type='text' v-model="question"><br>
-                Answer: <input class='newTree-answer' type='text' v-model="answer"><br>
+                <span class="newTree-temp-color">Question: </span><input class='newTree-question' type='text' v-model="question"><br>
+                <span class="newTree-temp-color">Answer:</span> <input class='newTree-answer' type='text' v-model="answer"><br>
                 <button class='newTree-create-button' v-on:click="createNewTree">Create</button>
             </p>
             <p class="newTree-form tree-heading" v-if="contentIsHeading">
                 <input type="hidden" class="newTree-parentId" v-model="parentid">
-                Heading: <input class='newTree-heading' type='text' v-model="title"><br>
+                <span class="newTree-temp-color">Heading: </span><input class='newTree-heading' type='text' v-model="title"><br>
                 <button class='newTree-create-button' v-on:click="createNewTree">Create</button>
             </p>
             <p class="newTree-form tree-skill" v-if="contentIsSkill">
                 <input type="hidden" class="newTree-parentId" v-model="parentid">
-                Skill: <input class='newTree-skill' type='text' v-model="title"><br>
+                <span class="newTree-temp-color">Skill:</span><input class='newTree-skill' type='text' v-model="title"><br>
                 <button class='newTree-create-button' v-on:click="createNewTree">Create</button>
             </p>
         </p>
