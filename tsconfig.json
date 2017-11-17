@@ -7,8 +7,10 @@
     "strict": false,
     "alwaysStrict": false,
     "noImplicitUseStrict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "lib": ["es2015", "es2017", "dom"],
-    "types": ["mocha", "node"]
+    "types": ["mocha", "node", "reflect-metadata"]
   },
   "exclude": [
     "node_modules"
