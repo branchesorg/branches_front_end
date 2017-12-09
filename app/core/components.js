@@ -18,6 +18,8 @@ import ProficiencySelector from '../components/proficiencySelector/proficiencySe
 import ItemHistory from '../components/itemHistory/itemHistory'
 import StudyMenu from '../components/studyMenu/studyMenu'
 import Points from '../components/points/points.vue'
+import { StripeCheckout } from 'vue-stripe'
+Vue.component('stripe-checkout', StripeCheckout);
 Vue.component('branchesFooter', Footer)
 Vue.component('reviewSchedule', ReviewSchedule)
 Vue.component('contentList', ContentList)

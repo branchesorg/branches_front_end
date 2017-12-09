@@ -15,6 +15,7 @@ import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import AsyncComputed from 'vue-async-computed'
 import {Tree} from "../objects/tree/tree";
+import BranchesStripe from "../components/giveUsUrMonee/branchesStripe";
 Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(AsyncComputed);
@@ -26,36 +27,37 @@ import store from './store.js'
 const Foo = { template: '<div>foo</div>' }
 const Bar = { template: '<div>bar</div>' }
 
-const Buy = { template: '<div> Give us ur monee</div>'}
+const Buy = { template: require('../components/giveUsUrMonee/branches-stripe.html')};
 // 2. Define some routes
 // Each route should map to a component. The "component" can
 // either be an actual component constructor created via
 // `Vue.extend()`, or just a component options object.
 // We'll talk about nested routes later.
 const routes = [
-  { path: '/buy', component: Buy },
-  { path: '/foo', component: Foo },
-  { path: '/bar', component: Bar },
-  { path: '/study/:leafId', name: 'study', component: TreeReviewContainer, props: true },
-  { path: '/create', name: 'create',  component: ExerciseCreatorContainer, props: true },
-   {path: '/user', name: 'user', component: UserInfo, props: true },
-  { path: '/ebbinghaus', name: 'ebbinghaus', component: Ebbinghaus, props: true },
-  { path: '/edit/:exerciseToReplaceId', name: 'edit',  component: ExerciseCreatorContainer, props: true },
-  { path: '/contentList', name: 'contentList',  component: ContentList, props: true },
-  // { path: '/:treeId', component: KnawledgeMap, props: true },
-  { path: '/:contentUri', component: KnawledgeMap, props: true },
-  { path: '/', component: KnawledgeMap, props: true },
-  { path: 'trees/:treeId/', component: Tree, props: true },
-  { path: '/Everything/:contentUri/', component: Tree, props: true },
-  // {path: '*/:path1/:path2/:path3/:path4/', component: KnawledgeMap, props: true },
-   {path: '*/:path1', component: KnawledgeMap, props: true },
+    { path: '/buy', component: BranchesStripe },
+
+    { path: '/foo', component: Foo },
+    { path: '/bar', component: Bar },
+    { path: '/study/:leafId', name: 'study', component: TreeReviewContainer, props: true },
+    { path: '/create', name: 'create',  component: ExerciseCreatorContainer, props: true },
+    {path: '/user', name: 'user', component: UserInfo, props: true },
+    { path: '/ebbinghaus', name: 'ebbinghaus', component: Ebbinghaus, props: true },
+    { path: '/edit/:exerciseToReplaceId', name: 'edit',  component: ExerciseCreatorContainer, props: true },
+    { path: '/contentList', name: 'contentList',  component: ContentList, props: true },
+    // { path: '/:treeId', component: KnawledgeMap, props: true },
+    { path: '/:contentUri', component: KnawledgeMap, props: true },
+    { path: '/', component: KnawledgeMap, props: true },
+    { path: 'trees/:treeId/', component: Tree, props: true },
+    { path: '/Everything/:contentUri/', component: Tree, props: true },
+    // {path: '*/:path1/:path2/:path3/:path4/', component: KnawledgeMap, props: true },
+    {path: '*/:path1', component: KnawledgeMap, props: true },
 ]
 
 // 3. Create the router instance and pass the `routes` option
 // You can pass in additional options here, but let's
 // keep it simple for now.
 const router = new VueRouter({
-  routes, // short for `routes: routes`
+    routes, // short for `routes: routes`
     mode: 'history',
 })
 
@@ -96,7 +98,7 @@ var vm = new Vue({
             this.state='home'
         },
         goToExerciseCreator(){
-           this.state='exerciseCreator'
+            this.state='exerciseCreator'
         },
         goToTreeReview() {
             this.state = 'treeReview'

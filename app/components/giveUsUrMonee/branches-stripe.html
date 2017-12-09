@@ -1,0 +1,11 @@
+<div class="payments-container">
+    <h2>This is where we collect the money from our amigos</h2>
+    <form action="#" v-if="stripekey">
+        <stripe-checkout
+                :stripe-key="stripekey"
+                :product="subscription"
+                on-success="broadcast"
+        >
+        </stripe-checkout>
+    </form>
+</div>
